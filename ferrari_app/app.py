@@ -117,7 +117,7 @@ else:
     st.error("⚠️ Errore: Mancano colonne necessarie nei dati!")
 
 # 🔹 Aggiorna la sessione con i dati corretti
-st.session_state["editor"] = data_editable.to_dict()  # ✅ Ora Streamlit accetta i dati
+st.session_state["editor"] = data_editable.to_json()  # ✅ Ora Streamlit accetta i dati senza problemi
 
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
