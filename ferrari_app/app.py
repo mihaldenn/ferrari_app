@@ -80,19 +80,21 @@ prodotti = [
 ]
 
 data_iniziale = pd.DataFrame({
-    "Prodotto": prodotti,
-    "Costo/mq": [50.0] * len(prodotti),
-    "PT": [False] * len(prodotti),
-    "P1": [False] * len(prodotti),
-    "Stima PT": [0.0] * len(prodotti),
-    "Stima P1": [0.0] * len(prodotti),
-    "Stima Totale": [0.0] * len(prodotti)
+    "Prodotto": prodotti,  # ❌ Bloccato (NON modificabile)
+    "Costo/mq": [50.0] * len(prodotti),  # ✅ Modificabile
+    "PT": [False] * len(prodotti),  # ✅ Modificabile
+    "P1": [False] * len(prodotti),  # ✅ Modificabile
+    "Stima PT": [0.0] * len(prodotti),  # ❌ Bloccato (calcolato)
+    "Stima P1": [0.0] * len(prodotti),  # ❌ Bloccato (calcolato)
+    "Stima Totale": [0.0] * len(prodotti)  # ❌ Bloccato (calcolato)
 })
 
 # 🔹 Solo alcune colonne possono essere modificate
-data_editable = st.data_editor(data_iniziale, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
+data_editable = st.data_editor(
+    data_iniziale, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor"
+)
 
-# 🔹 Calcolo automatico delle stime (senza modifica diretta)
+# 🔹 Calcolo automatico delle stime
 data_editable["Stima PT"] = data_editable.apply(
     lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
 
@@ -101,9 +103,9 @@ data_editable["Stima P1"] = data_editable.apply(
 
 data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
-# 🔹 Visualizzazione della tabella aggiornata
+# 🔹 Visualizzazione della tabella unica
 st.subheader("📊 Configurazione Prodotti")
-st.dataframe(data_editable, use_container_width=True)
+st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="final_table", use_container_width=True)
 
 # ─────────────────────────────────────────────
 # SEZIONE CALCOLI FINALI
