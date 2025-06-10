@@ -94,11 +94,14 @@ if "editor" not in st.session_state or not isinstance(st.session_state["editor"]
 if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list) or not st.session_state["editor"]:
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
-data_editable = pd.DataFrame(st.session_state["editor"])
+if isinstance(st.session_state["editor"], list) and len(st.session_state["editor"]) > 0:
+    data_editable = pd.DataFrame(st.session_state["editor"])
+else:
+    data_editable = pd.DataFrame(data_iniziale)
 
 # 🔹 Mostra la tabella con dati modificabili 
 if not data_editable.empty:
-    data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
+    data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"])
 else:
     st.warning("⚠️ Nessun dato disponibile per la tabella!")
 
