@@ -70,9 +70,7 @@ st.write(f"**Cliente selezionato:** {nome_cliente}")
 if "editor" not in st.session_state or st.session_state["editor"] is None:
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 # ─────────────────────────────────────────────
-if "editor" not in st.session_state or st.session_state["editor"] is None:
-    st.session_state["editor"] = data_iniziale.to_dict(orient="records")
-# ─────────────────────────────────────────────
+
 # SEZIONE TABELLA PRODOTTI
 st.header("Configura Prodotti e Costi")
 
@@ -109,10 +107,6 @@ if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
         lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
 
     data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
-
-# 🔹 Aggiorna la sessione dopo le modifiche
-if st.button("💾 Salva Modifiche"):
-    st.session_state["editor"] = data_editable.to_dict(orient="records")  # ✅ Nessun errore di sessione!
 
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
