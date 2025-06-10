@@ -91,11 +91,17 @@ if "editor" not in st.session_state or not isinstance(st.session_state["editor"]
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
 # 🔹 Assicura che `data_editable` sia sempre un DataFrame corretto
-data_editable = pd.DataFrame(st.session_state["editor"]) if isinstance(st.session_state["editor"], list) else pd.DataFrame(data_iniziale)
+if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list) or not st.session_state["editor"]:
+    st.session_state["editor"] = data_iniziale.to_dict(orient="records")
+
+data_editable = pd.DataFrame(st.session_state["editor"])
 
 # 🔹 Mostra la tabella con dati modificabili
 st.header("Configura Prodotti e Costi")  
-data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
+if not data_editable.empty:
+    data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
+else:
+    st.warning("⚠️ Nessun dato disponibile per la tabella!")
 
 # 🔹 Calcolo automatico delle stime
 if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
