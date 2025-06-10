@@ -58,7 +58,7 @@ stile_ferrari()
 
 col1, col2, col3 = st.columns([1, 1, 1])
 with col1:
-    logo = Image.open("C:/ferrari-app/ferrari_app/logo_ferrari.jpg")
+    logo = Image.open("logo_ferrari.jpg")
     st.image(logo, width=150)
 
 
