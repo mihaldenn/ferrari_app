@@ -142,7 +142,7 @@ st.write(f"• Piano Primo → €{incidenza_p1} / mq")
 
 # ─────────────────────────────────────────────
 # SEZIONE 4️⃣ – ESPORTAZIONE PDF & EXCEL
-config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")  # ✅ Percorso corretto su Streamlit Cloud!
+config = pdfkit.configuration(wkhtmltopdf="/mount/bin/wkhtmltopdf")  # ✅ Percorso corretto su Streamlit Cloud!
 
 if st.button("💾 Scarica Preventivo in PDF"):
     html = f"""
