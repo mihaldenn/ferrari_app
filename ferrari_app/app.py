@@ -113,7 +113,7 @@ if "editor" in st.session_state:
         st.error("⚠️ Errore: Le colonne necessarie non sono presenti nei dati!")
 
     # 🔹 Aggiorna session_state con una copia sicura
-   st.session_state["editor"] = data_editable.copy()
+st.session_state["editor"] = data_editable.copy()
 st.experimental_rerun()  # ✅ Forza Streamlit a ricaricare la pagina
 
 # ─────────────────────────────────────────────
