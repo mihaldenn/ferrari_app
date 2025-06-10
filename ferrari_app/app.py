@@ -98,7 +98,7 @@ if "editor" in st.session_state:
     if isinstance(data_raw, list):
         data_editable = pd.DataFrame(data_raw)  # ✅ Se è una lista, converti direttamente
     elif isinstance(data_raw, dict):
-        data_editable = pd.DataFrame.from_records(data_raw)  # ✅ Conversione sicura per evitare ambiguità
+       data_editable = pd.DataFrame(data_raw) if isinstance(data_raw, list) else pd.DataFrame.from_dict(data_raw)  # ✅ Conversione corretta per entrambi i formati
     else:
         st.error("⚠️ Errore: Formato dei dati non riconosciuto!")
 
