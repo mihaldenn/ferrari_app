@@ -94,25 +94,12 @@ data_editable = st.data_editor(
 if "editor" in st.session_state:
     data_raw = st.session_state["editor"]
 
-    # ✅ Assicura che i dati siano in un formato tabellare
-    if isinstance(data_raw, list):
-        data_editable = pd.DataFrame(data_raw)  # ✅ Se è una lista, converti direttamente
-    elif isinstance(data_raw, dict):
-      if isinstance(data_raw, pd.DataFrame):
-    data_editable = data_raw  # ✅ Se è già un DataFrame, usalo direttamente
-elif isinstance(data_raw, list):
-    data_editable = pd.DataFrame(data_raw)  # ✅ Se è una lista, converti normalmente
-elif isinstance(data_raw, dict):
+    # ✅ Conversione sicura dei dati senza errori
     try:
-        data_editable = pd.DataFrame.from_dict(data_raw)  # ✅ Tentativo di conversione
+        data_editable = pd.DataFrame(data_raw) if isinstance(data_raw, list) else pd.DataFrame.from_dict(data_raw)
     except ValueError:
-        st.error("⚠️ Errore nella conversione dei dati! Format non valido.")
+        st.error("⚠️ Errore nella conversione dei dati! Tentativo di correzione...")
         data_editable = pd.DataFrame(list(data_raw.items()), columns=["Colonna", "Valore"])  # ✅ Backup sicuro
-else:
-    st.error("⚠️ Formato dei dati non riconosciuto! Impossibile creare DataFrame.")
-    data_editable = pd.DataFrame()  # ✅ Evita il crash restituendo un DataFrame vuoto
-    else:
-        st.error("⚠️ Errore: Formato dei dati non riconosciuto!")
 
     # ✅ Calcolo delle stime corretto
     data_editable["Stima PT"] = data_editable.apply(
