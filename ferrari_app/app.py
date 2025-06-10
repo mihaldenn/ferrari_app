@@ -51,8 +51,8 @@ stile_ferrari()
 # SEZIONE LOGO CENTRATO E TITOLO
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    logo = Image.open("./ferrari_app/logo_ferrari.jpg")  # ✅ Percorso corretto su Streamlit Cloud
-st.image(logo, width=150)
+    logo = Image.open("./ferrari_app/logo_ferrari.jpg")
+    st.image(logo, width=150)
 
 st.title("Preventivo – FerrariContract")
 
@@ -83,27 +83,33 @@ data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
     "Costo/mq": [50.0] * len(prodotti),
     "PT": [False] * len(prodotti),
-    "P1": [False] * len(prodotti)
+    "P1": [False] * len(prodotti),
+    "Stima PT": [0.0] * len(prodotti),
+    "Stima P1": [0.0] * len(prodotti),
+    "Stima Totale": [0.0] * len(prodotti)
 })
 
-# 🔹 Calcolo automatico delle stime
-data_iniziale["Stima PT"] = data_iniziale.apply(
+# 🔹 Solo alcune colonne possono essere modificate
+data_editable = st.data_editor(data_iniziale, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
+
+# 🔹 Calcolo automatico delle stime (senza modifica diretta)
+data_editable["Stima PT"] = data_editable.apply(
     lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
 
-data_iniziale["Stima P1"] = data_iniziale.apply(
+data_editable["Stima P1"] = data_editable.apply(
     lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
 
-data_iniziale["Stima Totale"] = data_iniziale["Stima PT"] + data_iniziale["Stima P1"]
+data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
-# 🔹 Visualizzazione tabella senza modifica
-st.subheader("📊 Riepilogo Stime")
-st.dataframe(data_iniziale, use_container_width=True)
+# 🔹 Visualizzazione della tabella aggiornata
+st.subheader("📊 Configurazione Prodotti")
+st.dataframe(data_editable, use_container_width=True)
 
 # ─────────────────────────────────────────────
 # SEZIONE CALCOLI FINALI
 st.header("Calcoli Finali")
 
-totale = data_iniziale["Stima Totale"].sum()
+totale = data_editable["Stima Totale"].sum()
 totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
 
 incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
@@ -135,6 +141,6 @@ if st.button("💾 Scarica Preventivo in PDF"):
 if st.button("📥 Esporta Excel"):
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
-        data_iniziale.to_excel(writer, index=False, sheet_name="Preventivo")
+        data_editable.to_excel(writer, index=False, sheet_name="Preventivo")
     buffer.seek(0)
     st.download_button("📥 Scarica Excel", buffer, file_name="preventivo_ferrari.xlsx")
