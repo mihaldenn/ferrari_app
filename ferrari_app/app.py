@@ -106,7 +106,7 @@ if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
 
 # 🔹 Aggiorna la sessione dopo le modifiche
 if st.button("💾 Salva Modifiche"):
-    st.session_state["editor"] = data_editable.to_dict(orient="records")
+    st.session_state["editor"] = data_tmp.to_dict(orient="records")  # ✅ Aggiorna sessione in modo sicuro!
 
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
