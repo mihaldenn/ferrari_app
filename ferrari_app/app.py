@@ -59,7 +59,6 @@ stile_ferrari()
 col1, col2, col3 = st.columns([1, 1, 1])
 with col1:
     logo = Image.open("ferrari_app/logo_ferrari.jpg")  # ✅ Usa il percorso relativo al repository!
-st.image(logo, width=120)
 
 st.image(logo, width=150)
 
