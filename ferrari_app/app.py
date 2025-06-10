@@ -75,31 +75,31 @@ prodotti = [
     "MODULARI", "VETRO", "BAGNI", "ELETTRICO", "ARIA", "VMC", "ARREDI", "SOPPALCO"
 ]
 
-# 🔹 Definizione dati iniziali con valori specifici
+# 🔹 Definizione dati iniziali
 data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],  
-    "PT": [True if prod == "SOPPALCO" else False for prod in prodotti],  # ✅ Il Soppalco usa solo PT
-    "P1": [False if prod == "SOPPALCO" else True for prod in prodotti],  # ❌ Il Soppalco non ha P1
+    "PT": [False] * len(prodotti),
+    "P1": [False] * len(prodotti),
     "Stima PT": [0.0] * len(prodotti),
     "Stima P1": [0.0] * len(prodotti),
     "Stima Totale": [0.0] * len(prodotti)
 })
 
-# 🔹 Inizializza la sessione con `data_iniziale` in modo sicuro
+# 🔹 Inizializza la sessione in modo sicuro
 if "editor" not in st.session_state or st.session_state["editor"] is None:
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
 # 🔹 Usa una variabile temporanea per evitare errori con `st.data_editor`
-data_editable = pd.DataFrame(st.session_state["editor"])  
+data_editable = pd.DataFrame(st.session_state["editor"])
 data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
 
 # 🔹 Calcolo automatico delle stime
 data_editable["Stima PT"] = data_editable.apply(
-    lambda row: row["Costo/mq"] * (superficie_pt + superficie_p1) if row["Prodotto"] == "SOPPALCO" else row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
+    lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
 
 data_editable["Stima P1"] = data_editable.apply(
-    lambda row: 0.0 if row["Prodotto"] == "SOPPALCO" else row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
+    lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
 
 data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
