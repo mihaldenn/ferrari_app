@@ -7,7 +7,7 @@ import xlsxwriter
 
 # ─────────────────────────────────────────────
 # CONFIGURAZIONE GENERALE
-st.set_page_config(page_title="Preventivo FerrariContract [da finire]", layout="wide")
+st.set_page_config(page_title="Calcolo Preventivo - [app da finire]", layout="wide")
 
 def stile_ferrari():
     st.markdown("""
