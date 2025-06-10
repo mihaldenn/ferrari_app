@@ -68,11 +68,7 @@ st.write(f"**Cliente selezionato:** {nome_cliente}")
 
 # ─────────────────────────────────────────────
 # SEZIONE TABELLA PRODOTTI
-st.header("Configura Prodotti e Costi")  
-if not data_editable.empty:
-    data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
-else:
-    st.warning("⚠️ Nessun dato disponibile per la tabella!")
+st.header("Configura Prodotti e Costi")
 
 prodotti = [
     "PAVIMENTO", "SOPRAELEVATO", "CONTROSOFFITTO", "CARTONGESSO DELTA 125/175",
@@ -95,11 +91,9 @@ if "editor" not in st.session_state or not isinstance(st.session_state["editor"]
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
 # 🔹 Assicura che `data_editable` sia sempre un DataFrame valido
-if isinstance(st.session_state["editor"], list) and len(st.session_state["editor"]) > 0:
-    data_editable = pd.DataFrame(st.session_state["editor"])
-else:
-    data_editable = pd.DataFrame(data_iniziale)
+data_editable = pd.DataFrame(st.session_state["editor"]) if isinstance(st.session_state["editor"], list) else pd.DataFrame(data_iniziale)
 
+# 🔹 Mostra la tabella
 st.header("Configura Prodotti e Costi")  
 if not data_editable.empty:
     data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
@@ -131,28 +125,5 @@ if not data_editable.empty:
     st.write(f"💰 **Totale con margine e costi variabili:** €{totale_con_margine}")
 
     st.subheader("Incidenza al mq")
-    st.write(f"🏠 **Piano Terra:** €{incidenza_pt} / mq")
-    st.write(f"🏠 **Piano Primo:** €{incidenza_p1} / mq")
-
-# ─────────────────────────────────────────────
-# SEZIONE ESPORTAZIONE PDF & EXCEL
-config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
-
-if st.button("💾 Scarica Preventivo in PDF"):
-    html = f"""
-    <h1>Preventivo - FerrariContract</h1>
-    <p>Cliente: <strong>{nome_cliente}</strong></p>
-    """
-    pdfkit.from_string(html, "preventivo.pdf", configuration=config)
-    with open("preventivo.pdf", "rb") as f:
-        st.download_button("⬇️ Scarica il PDF", f, file_name="preventivo_ferrari.pdf")
-
-if st.button("📥 Esporta Excel"):
-    buffer = io.BytesIO()
-    with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
-        data_editable.to_excel(writer, index=False, sheet_name="Preventivo")
-    buffer.seek(0)
-    st.download_button("📥 Scarica Excel", buffer, file_name="preventivo_ferrari.xlsx")
-
     st.write(f"🏠 **Piano Terra:** €{incidenza_pt} / mq")
     st.write(f"🏠 **Piano Primo:** €{incidenza_p1} / mq")
