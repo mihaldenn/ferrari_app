@@ -14,7 +14,7 @@ def stile_ferrari():
     <style>
         html, body {
             background-color: white;  /* Sfondo bianco /* 🔹 Sfondo grigio chiaro */
-            color: black;
+            color: white;
         }
         h1, h2, h3 {
             color: white;
