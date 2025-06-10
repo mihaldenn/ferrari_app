@@ -87,7 +87,6 @@ data_iniziale = pd.DataFrame({
     "Stima PT": [0.0] * 12,
     "Stima P1": [0.0] * 12,
     "Stima Totale": [0.0] * 12
-})
     "PT": [False] * len(prodotti),
     "P1": [False] * len(prodotti),
     "Stima PT": [0.0] * len(prodotti),
