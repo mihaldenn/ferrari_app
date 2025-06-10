@@ -81,7 +81,7 @@ data_iniziale = pd.DataFrame({
         "PAVIMENTO", "SOPRAELEVATO", "CONTROSOFFITTO", "CARTONGESSO DELTA 125/175",
         "MODULARI", "VETRO", "BAGNI", "ELETTRICO", "ARIA", "VMC", "ARREDI", "SOPPALCO"
     ],
-    "Costo/mq": [55, 105, 75, 140, 185, 220, 90, 180, 240, 240, 140, 580],
+    "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
        "PT": [False] * len(prodotti),
     "P1": [False] * len(prodotti),  # 🔹 Correzione: "PI" → "P1"
     "Stima PT": [0.0] * len(prodotti),
