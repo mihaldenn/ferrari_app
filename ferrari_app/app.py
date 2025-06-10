@@ -28,9 +28,6 @@ def stile_ferrari():
             border-radius: 5px;
             padding: 0.6em 1.2em;
         }
-        .stDataFrame {
-            border: 1px solid #ddd;
-        }
         .watermark {
             position: fixed;
             top: 35%;
@@ -49,7 +46,7 @@ stile_ferrari()
 
 # ─────────────────────────────────────────────
 # SEZIONE LOGO CENTRATO E TITOLO
-col1, col2, col3 = st.columns([1, 2, 1])
+col1, col2, col3 = st.columns([2, 1, 1])
 with col1:
     logo = Image.open("./ferrari_app/logo_ferrari.jpg")
     st.image(logo, width=150)
@@ -60,14 +57,13 @@ st.title("Preventivo – FerrariContract")
 # SEZIONE DATI CLIENTE
 st.header("Dati Cliente e Parametri Generali")
 
-nome_cliente = st.text_input("Nome Cliente", value="Mario Rossi")
+nome_cliente = st.text_input("Nome Cliente", value="Marco De Francesco")
 superficie_pt = st.number_input("Superficie Piano Terra (mq)", value=125)
 superficie_p1 = st.number_input("Superficie Piano Primo (mq)", value=125)
 margine_errore = st.number_input("Margine di errore (%)", value=0.1)
 costi_variabili = st.number_input("Costi Variabili (€)", value=1000)
-superficie_totale = superficie_pt + superficie_p1
 
-st.write(f"**Superficie Totale:** {superficie_totale} mq")
+st.write(f"**Superficie Totale:** {superficie_pt + superficie_p1} mq")
 st.write(f"**Cliente selezionato:** {nome_cliente}")
 
 # ─────────────────────────────────────────────
@@ -94,17 +90,17 @@ data_editable = st.data_editor(
     data_iniziale, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor"
 )
 
-# 🔹 Calcolo automatico delle stime in base ai dati modificati
+# 🔹 Calcolo automatico delle stime basato sui dati modificati
 if "editor" in st.session_state:
-  data_raw = st.session_state["editor"]
+    data_raw = st.session_state["editor"]
 
-# 🔹 Assicura che i dati siano strutturati correttamente prima della conversione
-if isinstance(data_raw, dict):
-    data_editable = pd.DataFrame.from_dict(data_raw)  # ✅ Gestione sicura di dati in formato dizionario
-else:
-    data_editable = pd.DataFrame(data_raw)  # ✅ Conversione normale se i dati sono già corretti
-    
-    # 🔹 Calcola le stime basandosi sui valori modificati
+    # ✅ Conversione sicura in DataFrame per evitare errori
+    if isinstance(data_raw, dict):
+        data_editable = pd.DataFrame.from_dict(data_raw)
+    else:
+        data_editable = pd.DataFrame(data_raw)
+
+    # ✅ Calcolo delle stime corretto
     data_editable["Stima PT"] = data_editable.apply(
         lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
     
@@ -112,21 +108,9 @@ else:
         lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
     
     data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
-    
-    # 🔹 Aggiorna session_state per forzare l'aggiornamento di Streamlit
+
+    # 🔹 Aggiorna session_state per garantire che Streamlit aggiorni le stime
     st.session_state["editor"] = data_editable
-
-    data_editable["Stima PT"] = data_editable.apply(
-        lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
-    
-    data_editable["Stima P1"] = data_editable.apply(
-        lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
-    
-    data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
-
-# 🔹 Visualizzazione della tabella unica con stime calcolate
-st.subheader("📊 Configurazione Prodotti")
-st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="final_table", use_container_width=True)
 
 # ─────────────────────────────────────────────
 # SEZIONE ESPORTAZIONE PDF & EXCEL
