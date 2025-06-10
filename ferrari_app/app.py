@@ -86,8 +86,8 @@ data_iniziale = pd.DataFrame({
 })
 
 # 🔹 Inizializza la sessione in modo sicuro
-if "editor" not in st.session_state:
-    st.session_state["editor"] = data_iniziale.to_dict(orient="records")  # ✅ Formato compatibile con Streamlit
+if st.button("💾 Salva Modifiche"):
+    st.session_state["editor"] = data_editable.to_dict(orient="records")
 
 # 🔹 Usa una variabile temporanea per evitare errori con `st.data_editor`
 data_raw = st.session_state["editor"]
