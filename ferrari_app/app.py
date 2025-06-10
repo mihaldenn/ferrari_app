@@ -61,7 +61,7 @@ with col1:
     logo = Image.open("ferrari_app/logo_ferrari.jpg")  # ✅ Usa il percorso relativo al repository!
 st.image(logo, width=120)
 
-    st.image(logo, width=150)
+st.image(logo, width=150)
 
 
 st.title("Preventivo – FerrariContract")
