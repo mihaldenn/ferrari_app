@@ -66,7 +66,7 @@ st.title("Preventivo – FerrariContract")
 # SEZIONE 1️⃣ – DATI CLIENTE
 st.header("Dati Cliente e Parametri Generali")
 
-nome_cliente = st.text_input("Nome Cliente", value="Mario Rossi")
+nome_cliente = st.text_input("Nome Cliente", value="Marco De Francesco")
 superficie_pt = st.number_input("Superficie Piano Terra (mq)", value=125)
 superficie_p1 = st.number_input("Superficie Piano Primo (mq)", value=125)
 margine_errore = st.number_input("Margine di errore (%)", value=0.1)
