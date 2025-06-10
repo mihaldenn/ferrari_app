@@ -91,7 +91,7 @@ if "editor" not in st.session_state:
 
 # 🔹 Usa una variabile temporanea per evitare errori con `st.data_editor`
 data_raw = st.session_state["editor"]
-data_editable = pd.DataFrame.from_records(data_raw)  # ✅ Garantisce compatibilità con pandas!
+data_editable = pd.DataFrame(st.session_state["editor"]) if isinstance(st.session_state["editor"], list) else pd.DataFrame(data_iniziale)
 data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
 
 # 🔹 Calcolo automatico delle stime
