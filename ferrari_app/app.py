@@ -81,9 +81,9 @@ prodotti = [
 
 data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
-    "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],  # ✅ Valori corretti!
-    "PT": [False] * len(prodotti),
-   data_iniziale["P1"] = [False if prod != "SOPPALCO" else False for prod in prodotti]  # ✅ P1 disattivato solo per "Soppalco"!
+    "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],  
+    "PT": [False if prod == "SOPPALCO" else False for prod in prodotti],  # ✅ P1 escluso per "Soppalco"
+    "P1": [False if prod == "SOPPALCO" else False for prod in prodotti],  # ❌ NON sarà usato per "Soppalco"
     "Stima PT": [0.0] * len(prodotti),
     "Stima P1": [0.0] * len(prodotti),
     "Stima Totale": [0.0] * len(prodotti)
