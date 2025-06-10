@@ -91,7 +91,6 @@ if "editor" not in st.session_state or st.session_state["editor"] is None:
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
 # 🔹 Usa una variabile temporanea per evitare errori con `st.data_editor`
-data_editable = pd.DataFrame(st.session_state["editor"])  
 data_editable = pd.DataFrame(st.session_state["editor"]) if isinstance(st.session_state["editor"], list) else pd.DataFrame(data_iniziale)
 
 # 🔹 Calcolo automatico delle stime
