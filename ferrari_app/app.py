@@ -76,13 +76,13 @@ prodotti = [
 ]
 
 data_iniziale = pd.DataFrame({
-    "Prodotto": prodotti,  # ❌ Bloccato (NON modificabile)
-    "Costo/mq": [50.0] * len(prodotti),  # ✅ Modificabile
-    "PT": [False] * len(prodotti),  # ✅ Modificabile
-    "P1": [False] * len(prodotti),  # ✅ Modificabile
-    "Stima PT": [0.0] * len(prodotti),  # ❌ Bloccato (calcolato)
-    "Stima P1": [0.0] * len(prodotti),  # ❌ Bloccato (calcolato)
-    "Stima Totale": [0.0] * len(prodotti)  # ❌ Bloccato (calcolato)
+    "Prodotto": prodotti,
+    "Costo/mq": [50.0] * len(prodotti),
+    "PT": [False] * len(prodotti),
+    "P1": [False] * len(prodotti),
+    "Stima PT": [0.0] * len(prodotti),
+    "Stima P1": [0.0] * len(prodotti),
+    "Stima Totale": [0.0] * len(prodotti)
 })
 
 # 🔹 Permetti modifiche solo su alcune colonne
@@ -90,21 +90,18 @@ data_editable = st.data_editor(
     data_iniziale, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor"
 )
 
-# 🔹 Conversione sicura dei dati
+# 🔹 Conversione sicura dei dati e verifica colonne
 if "editor" in st.session_state:
     data_raw = st.session_state["editor"]
 
     try:
         data_editable = pd.DataFrame(data_raw) if isinstance(data_raw, list) else pd.DataFrame.from_dict(data_raw)
     except ValueError:
-        st.error("⚠️ Errore nella conversione dei dati! Tentativo di correzione...")
-        data_editable = pd.DataFrame(list(data_raw.items()), columns=["Colonna", "Valore"])  # ✅ Backup sicuro
+        st.error("⚠️ Errore nella conversione dei dati!")
+        data_editable = pd.DataFrame(columns=["Prodotto", "Costo/mq", "PT", "P1", "Stima PT", "Stima P1", "Stima Totale"])
 
-    # 🔹 Controllo colonne per evitare `KeyError`
-    colonne_necessarie = ["PT", "P1", "Costo/mq"]
-    colonne_presenti = all(col in data_editable.columns for col in colonne_necessarie)
-
-    if colonne_presenti:
+    colonne_necessarie = {"PT", "P1", "Costo/mq"}
+    if colonne_necessarie.issubset(set(data_editable.columns)):
         data_editable["Stima PT"] = data_editable.apply(
             lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
 
@@ -115,11 +112,8 @@ if "editor" in st.session_state:
     else:
         st.error("⚠️ Errore: Le colonne necessarie non sono presenti nei dati!")
 
-    # 🔹 Aggiorna session_state per garantire che Streamlit aggiorni le stime
-   if isinstance(data_editable, pd.DataFrame):
-    st.session_state["editor"] = data_editable.copy()  # ✅ Usa una copia sicura
-else:
-    st.error("⚠️ Errore: `data_editable` non è un DataFrame valido!")
+    # 🔹 Aggiorna session_state con una copia sicura
+    st.session_state["editor"] = data_editable.copy()
 
 # ─────────────────────────────────────────────
 # SEZIONE ESPORTAZIONE PDF & EXCEL
