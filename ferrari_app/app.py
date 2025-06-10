@@ -96,7 +96,7 @@ data_editable = st.data_editor(
 
 # 🔹 Calcolo automatico delle stime in base ai dati modificati
 if "editor" in st.session_state:
-    data_editable = pd.DataFrame(st.session_state["editor"])
+   data_editable = pd.DataFrame.from_dict(st.session_state["editor"])  # ✅ Ora la conversione funziona!
     
     # 🔹 Calcola le stime basandosi sui valori modificati
     data_editable["Stima PT"] = data_editable.apply(
