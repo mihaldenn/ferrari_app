@@ -85,24 +85,22 @@ data_iniziale = pd.DataFrame({
     "Stima Totale": [0.0] * len(prodotti)
 })
 
+# 🔹 Inizializza session_state se necessario
+if "editor" not in st.session_state or not isinstance(st.session_state["editor"], pd.DataFrame):
+    st.session_state["editor"] = data_iniziale.copy()
+
 # 🔹 Permetti modifiche solo su alcune colonne
 data_editable = st.data_editor(
-    data_iniziale, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor"
+    st.session_state["editor"], disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor"
 )
 
-# 🔹 Assicura che `st.session_state["editor"]` sia sempre un DataFrame valido
-if "editor" not in st.session_state or not isinstance(st.session_state["editor"], pd.DataFrame):
-   if "editor" not in st.session_state:
-    st.session_state["editor"] = data_iniziale.copy()  # ✅ Ora è correttamente indentata!
-
-# 🔹 Recupera i dati della sessione
-data_raw = st.session_state["editor"]
-
-try:
-    data_editable = pd.DataFrame(data_raw) if isinstance(data_raw, list) else pd.DataFrame.from_dict(data_raw)
-except ValueError:
-    st.error("⚠️ Errore nella conversione dei dati!")
-    data_editable = pd.DataFrame(columns=["Prodotto", "Costo/mq", "PT", "P1", "Stima PT", "Stima P1", "Stima Totale"])
+# 🔹 Recupera i dati e verifica la conversione
+if "editor" in st.session_state:
+    try:
+        data_editable = pd.DataFrame(st.session_state["editor"])
+    except ValueError:
+        st.error("⚠️ Errore nella conversione dei dati!")
+        data_editable = data_iniziale.copy()
 
 # 🔹 Calcolo automatico delle stime
 if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
@@ -113,11 +111,9 @@ if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
         lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
 
     data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
-else:
-    st.error("⚠️ Errore: Mancano colonne necessarie nei dati!")
 
-# 🔹 Aggiorna la sessione con i dati corretti
-st.session_state["editor"] = data_editable.to_json()  # ✅ Ora Streamlit accetta i dati senza problemi
+# 🔹 Aggiorna la sessione in modo sicuro
+st.session_state["editor"] = data_editable.copy()
 
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
