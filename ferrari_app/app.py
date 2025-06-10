@@ -68,7 +68,11 @@ st.write(f"**Cliente selezionato:** {nome_cliente}")
 
 # ─────────────────────────────────────────────
 # SEZIONE TABELLA PRODOTTI
-st.header("Configura Prodotti e Costi")
+st.header("Configura Prodotti e Costi")  
+if not data_editable.empty:
+    data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
+else:
+    st.warning("⚠️ Nessun dato disponibile per la tabella!")
 
 prodotti = [
     "PAVIMENTO", "SOPRAELEVATO", "CONTROSOFFITTO", "CARTONGESSO DELTA 125/175",
@@ -87,7 +91,7 @@ data_iniziale = pd.DataFrame({
 })
 
 # 🔹 Inizializza la sessione in modo sicuro
-if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list):
+if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list) or not st.session_state["editor"]:
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
 # 🔹 Assicura che `data_editable` sia sempre un DataFrame valido
