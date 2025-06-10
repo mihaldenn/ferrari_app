@@ -51,8 +51,8 @@ stile_ferrari()
 # SEZIONE LOGO CENTRATO E TITOLO
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    logo = Image.open("logo_ferrari.jpg")
-    st.image(logo, width=150)
+    logo = Image.open("./logo_ferrari.jpg")  # ✅ Percorso corretto su Streamlit Cloud
+st.image(logo, width=150)
 
 st.title("Preventivo – FerrariContract")
 
