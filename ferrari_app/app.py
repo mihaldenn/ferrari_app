@@ -92,7 +92,7 @@ if "editor" not in st.session_state or st.session_state["editor"] is None:
 
 # 🔹 Usa una variabile temporanea per evitare errori con `st.data_editor`
 data_editable = pd.DataFrame(st.session_state["editor"])  
-data_tmp = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
+data_editable = pd.DataFrame(st.session_state["editor"]) if isinstance(st.session_state["editor"], list) else pd.DataFrame(data_iniziale)
 
 # 🔹 Calcolo automatico delle stime
 if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
