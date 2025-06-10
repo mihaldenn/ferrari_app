@@ -86,19 +86,16 @@ data_iniziale = pd.DataFrame({
     "Stima Totale": [0.0] * len(prodotti)
 })
 
-# 🔹 Inizializza la sessione in modo sicuro
+# 🔹 Inizializza la sessione con dati validi
 if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list) or not st.session_state["editor"]:
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
-# 🔹 Assicura che `data_editable` sia sempre un DataFrame valido
+# 🔹 Assicura che `data_editable` sia sempre un DataFrame corretto
 data_editable = pd.DataFrame(st.session_state["editor"]) if isinstance(st.session_state["editor"], list) else pd.DataFrame(data_iniziale)
 
-# 🔹 Mostra la tabella
+# 🔹 Mostra la tabella con dati modificabili
 st.header("Configura Prodotti e Costi")  
-if not data_editable.empty:
-    data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
-else:
-    st.warning("⚠️ Nessun dato disponibile per la tabella!")
+data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
 
 # 🔹 Calcolo automatico delle stime
 if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
