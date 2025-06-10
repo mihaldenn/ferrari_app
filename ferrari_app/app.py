@@ -67,6 +67,9 @@ st.write(f"**Superficie Totale:** {superficie_pt + superficie_p1} mq")
 st.write(f"**Cliente selezionato:** {nome_cliente}")
 
 # ─────────────────────────────────────────────
+if "editor" not in st.session_state or st.session_state["editor"] is None:
+    st.session_state["editor"] = data_iniziale.to_dict(orient="records")
+# ─────────────────────────────────────────────
 # SEZIONE TABELLA PRODOTTI
 st.header("Configura Prodotti e Costi")
 
