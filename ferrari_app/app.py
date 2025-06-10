@@ -90,10 +90,6 @@ data_editable = st.data_editor(
     data_iniziale, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor"
 )
 
-# 🔹 Debug: Visualizza contenuto di `st.session_state["editor"]`
-if "editor" in st.session_state:
-    st.write("Debug - Contenuto di editor:", st.session_state["editor"])
-
 # 🔹 Conversione sicura dei dati
 if "editor" in st.session_state:
     data_raw = st.session_state["editor"]
@@ -105,7 +101,10 @@ if "editor" in st.session_state:
         data_editable = pd.DataFrame(list(data_raw.items()), columns=["Colonna", "Valore"])  # ✅ Backup sicuro
 
     # 🔹 Controllo colonne per evitare `KeyError`
-    if "PT" in data_editable.columns and "Costo/mq" in data_editable.columns:
+    colonne_necessarie = ["PT", "P1", "Costo/mq"]
+    colonne_presenti = all(col in data_editable.columns for col in colonne_necessarie)
+
+    if colonne_presenti:
         data_editable["Stima PT"] = data_editable.apply(
             lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
 
@@ -114,7 +113,7 @@ if "editor" in st.session_state:
 
         data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
     else:
-        st.error("⚠️ Errore: Le colonne 'PT' o 'Costo/mq' non sono presenti nei dati!")
+        st.error("⚠️ Errore: Le colonne necessarie non sono presenti nei dati!")
 
     # 🔹 Aggiorna session_state per garantire che Streamlit aggiorni le stime
     st.session_state["editor"] = data_editable
