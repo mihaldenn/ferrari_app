@@ -113,17 +113,16 @@ if "editor" in st.session_state:
         st.error("⚠️ Errore: Le colonne necessarie non sono presenti nei dati!")
 
     # 🔹 Aggiorna session_state con una copia sicura
-if isinstance(data_editable, pd.DataFrame):
-    st.session_state["editor"] = data_editable.copy()
-else:
-    st.error("⚠️ Errore: `data_editable` non è un DataFrame valido!")
-st.experimental_rerun()  # ✅ Forza Streamlit a ricaricare la pagina
+    if isinstance(data_editable, pd.DataFrame):
+        st.session_state["editor"] = data_editable.copy()
+    else:
+        st.error("⚠️ Errore: `data_editable` non è un DataFrame valido!")
 
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
 st.header("📊 Riepilogo Preventivo")
 
-if "editor" in st.session_state:
+if "editor" in st.session_state and not data_editable.empty:
     totale = data_editable["Stima Totale"].sum()
     totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
 
@@ -134,8 +133,8 @@ if "editor" in st.session_state:
     st.write(f"**Incidenza al mq:**")
     st.write(f"• Piano Terra → €{incidenza_pt} / mq")
     st.write(f"• Piano Primo → €{incidenza_p1} / mq")
-    
-    # ─────────────────────────────────────────────
+
+# ─────────────────────────────────────────────
 # SEZIONE ESPORTAZIONE PDF & EXCEL
 config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
 
