@@ -113,9 +113,26 @@ if "editor" in st.session_state:
         st.error("⚠️ Errore: Le colonne necessarie non sono presenti nei dati!")
 
     # 🔹 Aggiorna session_state con una copia sicura
-    st.session_state["editor"] = data_editable.copy()
+   st.session_state["editor"] = data_editable.copy()
+st.experimental_rerun()  # ✅ Forza Streamlit a ricaricare la pagina
 
 # ─────────────────────────────────────────────
+# SEZIONE RISULTATI FINALI
+st.header("📊 Riepilogo Preventivo")
+
+if "editor" in st.session_state:
+    totale = data_editable["Stima Totale"].sum()
+    totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
+
+    incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
+    incidenza_p1 = round(totale_con_margine / superficie_p1, 2) if superficie_p1 else 0
+
+    st.write(f"**Totale stimato con margine e costi variabili:** €{totale_con_margine}")
+    st.write(f"**Incidenza al mq:**")
+    st.write(f"• Piano Terra → €{incidenza_pt} / mq")
+    st.write(f"• Piano Primo → €{incidenza_p1} / mq")
+    
+    # ─────────────────────────────────────────────
 # SEZIONE ESPORTAZIONE PDF & EXCEL
 config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
 
