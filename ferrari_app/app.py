@@ -87,11 +87,11 @@ data_iniziale = pd.DataFrame({
 
 # 🔹 Inizializza la sessione in modo sicuro
 if "editor" not in st.session_state:
-    st.session_state["editor"] = data_iniziale.copy()
+    st.session_state["editor"] = data_iniziale.to_dict(orient="records")  # ✅ Formato compatibile con Streamlit
 
 # 🔹 Usa una variabile temporanea per evitare errori con `st.data_editor`
-data_raw = st.session_state["editor"]
-data_editable = pd.DataFrame(data_raw) if isinstance(data_raw, list) else pd.DataFrame.from_dict(data_raw)
+data_editable = pd.DataFrame(st.session_state["editor"])
+data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
 
 # 🔹 Calcolo automatico delle stime
 if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
@@ -104,7 +104,7 @@ if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
     data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
 # 🔹 Aggiorna la sessione dopo le modifiche
-st.session_state["editor"] = data_editable.to_dict(orient="records")  # ✅ Ora compatibile con Streamlit!
+st.session_state["editor"] = data_editable.to_dict(orient="records")
 
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
