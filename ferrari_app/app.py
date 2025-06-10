@@ -90,49 +90,44 @@ data_editable = st.data_editor(
     data_iniziale, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor"
 )
 
-# 🔹 Conversione sicura dei dati e verifica colonne
-if "editor" in st.session_state:
-    data_raw = st.session_state["editor"]
-
-    try:
-        data_editable = pd.DataFrame(data_raw) if isinstance(data_raw, list) else pd.DataFrame.from_dict(data_raw)
-    except ValueError:
-        st.error("⚠️ Errore nella conversione dei dati!")
-        data_editable = pd.DataFrame(columns=["Prodotto", "Costo/mq", "PT", "P1", "Stima PT", "Stima P1", "Stima Totale"])
-
-    colonne_necessarie = {"PT", "P1", "Costo/mq"}
-    if colonne_necessarie.issubset(set(data_editable.columns)):
-        data_editable["Stima PT"] = data_editable.apply(
-            lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
-
-        data_editable["Stima P1"] = data_editable.apply(
-            lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
-
-        data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
-    else:
-        st.error("⚠️ Errore: Le colonne necessarie non sono presenti nei dati!")
-
-    # 🔹 Aggiorna session_state con una copia sicura
-    # 🔹 Inizializza lo stato della sessione solo se necessario
+# 🔹 Assicura che `st.session_state["editor"]` sia sempre un DataFrame valido
 if "editor" not in st.session_state or not isinstance(st.session_state["editor"], pd.DataFrame):
-    st.session_state["editor"] = pd.DataFrame(columns=["Prodotto", "Costo/mq", "PT", "P1", "Stima PT", "Stima P1", "Stima Totale"])
+    st.session_state["editor"] = data_iniziale.copy()
 
-# 🔹 Aggiorna i dati senza causare errori
+# 🔹 Recupera i dati della sessione
+data_raw = st.session_state["editor"]
+
+try:
+    data_editable = pd.DataFrame(data_raw) if isinstance(data_raw, list) else pd.DataFrame.from_dict(data_raw)
+except ValueError:
+    st.error("⚠️ Errore nella conversione dei dati!")
+    data_editable = pd.DataFrame(columns=["Prodotto", "Costo/mq", "PT", "P1", "Stima PT", "Stima P1", "Stima Totale"])
+
+# 🔹 Calcolo automatico delle stime
+if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
+    data_editable["Stima PT"] = data_editable.apply(
+        lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
+
+    data_editable["Stima P1"] = data_editable.apply(
+        lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
+
+    data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
+else:
+    st.error("⚠️ Errore: Mancano colonne necessarie nei dati!")
+
+# 🔹 Aggiorna la sessione con i dati corretti
 st.session_state["editor"] = data_editable.copy()
 
-# ─────────────────────────────────────────────
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
 st.header("📊 Riepilogo Preventivo")
 
-if "editor" in st.session_state and not data_editable.empty:
+if not data_editable.empty:
     totale = data_editable["Stima Totale"].sum()
     totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
-
     incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
     incidenza_p1 = round(totale_con_margine / superficie_p1, 2) if superficie_p1 else 0
 
-    # 🔹 Mostra i risultati senza errori
     st.subheader("Totale Preventivo")
     st.write(f"💰 **Totale stimato:** €{totale}")
     st.write(f"💰 **Totale con margine e costi variabili:** €{totale_con_margine}")
