@@ -13,7 +13,7 @@ def stile_ferrari():
    st.markdown("""
     <style>
         html, body {
-            background-color: #f2f2f2;  /* 🔹 Sfondo grigio chiaro */
+            background-color: white;  /* Sfondo bianco /* 🔹 Sfondo grigio chiaro */
             color: black;
         }
         h1, h2, h3 {
