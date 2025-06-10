@@ -1,5 +1,0 @@
-streamlit
-pandas
-pillow
-pdfkit
-xlsxwriter
