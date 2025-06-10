@@ -81,7 +81,7 @@ prodotti = [
 
 data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
-    "Costo/mq": [50.0] * len(prodotti),
+    "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],  # ✅ Valori corretti!
     "PT": [False] * len(prodotti),
     "P1": [False] * len(prodotti),
     "Stima PT": [0.0] * len(prodotti),
