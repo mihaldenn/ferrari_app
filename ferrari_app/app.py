@@ -49,7 +49,7 @@ stile_ferrari()
 
 # ─────────────────────────────────────────────
 # SEZIONE LOGO CENTRATO E TITOLO
-col1, col2, col3 = st.columns([2, 1, 1])
+col1, col2, col3 = st.columns([1, 2, 1])
 with col1:
     logo = Image.open("./ferrari_app/logo_ferrari.jpg")
     st.image(logo, width=150)
@@ -89,36 +89,25 @@ data_iniziale = pd.DataFrame({
     "Stima Totale": [0.0] * len(prodotti)  # ❌ Bloccato (calcolato)
 })
 
-# 🔹 Solo alcune colonne possono essere modificate
+# 🔹 Permetti modifiche solo su alcune colonne
 data_editable = st.data_editor(
     data_iniziale, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor"
 )
 
-# 🔹 Calcolo automatico delle stime
-data_editable["Stima PT"] = data_editable.apply(
-    lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
+# 🔹 Calcolo automatico delle stime in base ai dati modificati
+if "editor" in st.session_state:
+    data_editable = st.session_state["editor"]
+    data_editable["Stima PT"] = data_editable.apply(
+        lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
+    
+    data_editable["Stima P1"] = data_editable.apply(
+        lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
+    
+    data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
-data_editable["Stima P1"] = data_editable.apply(
-    lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
-
-data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
-
-# ─────────────────────────────────────────────
-# SEZIONE CALCOLI FINALI
-st.header("Calcoli Finali")
-
-totale = data_editable["Stima Totale"].sum()
-totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
-
-incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
-incidenza_p1 = round(totale_con_margine / superficie_p1, 2) if superficie_p1 else 0
-
-# 🔹 Visualizzazione risultati
-st.subheader("💰 Totale Preventivo")
-st.write(f"**Totale stimato con margine e costi variabili:** €{totale_con_margine}")
-st.write(f"**Incidenza al mq:**")
-st.write(f"• Piano Terra → €{incidenza_pt} / mq")
-st.write(f"• Piano Primo → €{incidenza_p1} / mq")
+# 🔹 Visualizzazione della tabella unica con stime calcolate
+st.subheader("📊 Configurazione Prodotti")
+st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="final_table", use_container_width=True)
 
 # ─────────────────────────────────────────────
 # SEZIONE ESPORTAZIONE PDF & EXCEL
@@ -128,9 +117,6 @@ if st.button("💾 Scarica Preventivo in PDF"):
     html = f"""
     <h1>Preventivo - FerrariContract</h1>
     <p>Cliente: <strong>{nome_cliente}</strong></p>
-    <p>Totale stimato: <strong>€{totale_con_margine}</strong></p>
-    <p>Incidenza PT: €{incidenza_pt} / mq</p>
-    <p>Incidenza P1: €{incidenza_p1} / mq</p>
     """
     pdfkit.from_string(html, "preventivo.pdf", configuration=config)
     with open("preventivo.pdf", "rb") as f:
