@@ -103,10 +103,6 @@ data_editable["Stima P1"] = data_editable.apply(
 
 data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
-# 🔹 Visualizzazione della tabella unica
-st.subheader("📊 Configurazione Prodotti")
-st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="final_table", use_container_width=True)
-
 # ─────────────────────────────────────────────
 # SEZIONE CALCOLI FINALI
 st.header("Calcoli Finali")
