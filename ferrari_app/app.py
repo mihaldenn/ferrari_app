@@ -96,7 +96,7 @@ data_editable = st.data_editor(
 
 # 🔹 Calcolo automatico delle stime in base ai dati modificati
 if "editor" in st.session_state:
-    data_editable = st.session_state["editor"]
+  data_editable = pd.DataFrame(st.session_state["editor"])  # ✅ Converti in DataFrame!
     data_editable["Stima PT"] = data_editable.apply(
         lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
     
