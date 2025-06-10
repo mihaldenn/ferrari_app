@@ -90,10 +90,6 @@ data_iniziale = pd.DataFrame({
     "Stima Totale": [0.0] * len(prodotti)
 })
 
-# 2️⃣ Inizializza la sessione correttamente
-if "editor" not in st.session_state or st.session_state["editor"] is None:
-    st.session_state["editor"] = data_iniziale.to_dict(orient="records")  # ✅ Ora non dà errore!
-
 # 🔹 Inizializza la sessione in modo sicuro
 if st.button("💾 Salva Modifiche"):
     st.session_state["editor"] = data_editable.to_dict(orient="records")
