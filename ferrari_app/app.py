@@ -7,7 +7,7 @@ import xlsxwriter
 
 # ─────────────────────────────────────────────
 # CONFIGURAZIONE GENERALE
-st.set_page_config(page_title="Calcolo Preventivo - [app da finire]", layout="wide")
+st.set_page_config(page_title="Stima Calcolo Preventivo", layout="wide")
 
 def stile_ferrari():
     st.markdown("""
@@ -51,7 +51,7 @@ with col1:
     logo = Image.open("./ferrari_app/logo_ferrari.jpg")
     st.image(logo, width=150)
 
-st.title("Preventivo – FerrariContract")
+st.title("Stima Calcolo Preventivo - [BETA]")
 
 # ─────────────────────────────────────────────
 # SEZIONE DATI CLIENTE
