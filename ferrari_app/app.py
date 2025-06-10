@@ -90,10 +90,6 @@ data_iniziale = pd.DataFrame({
 if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list):
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
-# 🔹 Usa una variabile temporanea per evitare errori con `st.data_editor`
-if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list):
-    st.session_state["editor"] = data_iniziale.to_dict(orient="records")
-
 # 🔹 Assicura che `data_editable` sia sempre un DataFrame valido
 if isinstance(st.session_state["editor"], list) and len(st.session_state["editor"]) > 0:
     data_editable = pd.DataFrame(st.session_state["editor"])
