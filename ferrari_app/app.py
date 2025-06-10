@@ -10,48 +10,32 @@ import xlsxwriter
 st.set_page_config(page_title="Stima Calcolo Preventivo", layout="wide")
 
 def stile_ferrari():
-    st.markdown("""
-        <style>
+   st.markdown("""
+    <style>
         html, body {
-            background-color: #f2f2f2;
-            color: #000000;
+            background-color: #f2f2f2;  /* 🔹 Sfondo grigio chiaro */
+            color: black;
         }
         h1, h2, h3 {
-            color: #000000;
+            color: black;
             text-align: center;
         }
-        .stButton>button {
-            background-color: #f7c600;
-            color: #000;
-            border: none;
-            font-weight: bold;
-            border-radius: 5px;
-            padding: 0.6em 1.2em;
-        }
-        .watermark {
-            position: fixed;
-            top: 35%;
-            left: 15%;
-            font-size: 10em;
-            color: #f7c600;
-            opacity: 0.05;
-            transform: rotate(-25deg);
-            z-index: -1;
-        }
-        </style>
-        <div class="watermark">FERRARI</div>
-    """, unsafe_allow_html=True)
+    </style>
+""", unsafe_allow_html=True)
 
 stile_ferrari()
 
 # ─────────────────────────────────────────────
 # SEZIONE LOGO CENTRATO E TITOLO
-col1, col2, col3 = st.columns([2, 1, 1])
-with col1:
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
     logo = Image.open("./ferrari_app/logo_ferrari.jpg")
     st.image(logo, width=150)
 
-st.title("Stima Calcolo Preventivo - [BETA]")
+st.markdown(
+    "<h1 style='text-align: center; color: black;'>Stima Calcolo Preventivo - [BETA]</h1>",
+    unsafe_allow_html=True
+)
 
 # ─────────────────────────────────────────────
 # SEZIONE DATI CLIENTE
