@@ -113,10 +113,12 @@ if "editor" in st.session_state:
         st.error("⚠️ Errore: Le colonne necessarie non sono presenti nei dati!")
 
     # 🔹 Aggiorna session_state con una copia sicura
-    if isinstance(data_editable, pd.DataFrame):
-        st.session_state["editor"] = data_editable.copy()
-    else:
-        st.error("⚠️ Errore: `data_editable` non è un DataFrame valido!")
+    # 🔹 Inizializza lo stato della sessione solo se necessario
+if "editor" not in st.session_state or not isinstance(st.session_state["editor"], pd.DataFrame):
+    st.session_state["editor"] = pd.DataFrame(columns=["Prodotto", "Costo/mq", "PT", "P1", "Stima PT", "Stima P1", "Stima Totale"])
+
+# 🔹 Aggiorna i dati senza causare errori
+st.session_state["editor"] = data_editable.copy()
 
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
