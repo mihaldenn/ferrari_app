@@ -116,7 +116,10 @@ if "editor" in st.session_state:
         st.error("⚠️ Errore: Le colonne necessarie non sono presenti nei dati!")
 
     # 🔹 Aggiorna session_state per garantire che Streamlit aggiorni le stime
-    st.session_state["editor"] = data_editable
+   if isinstance(data_editable, pd.DataFrame):
+    st.session_state["editor"] = data_editable.copy()  # ✅ Usa una copia sicura
+else:
+    st.error("⚠️ Errore: `data_editable` non è un DataFrame valido!")
 
 # ─────────────────────────────────────────────
 # SEZIONE ESPORTAZIONE PDF & EXCEL
