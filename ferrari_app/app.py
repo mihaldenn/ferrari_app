@@ -49,8 +49,8 @@ stile_ferrari()
 
 # ─────────────────────────────────────────────
 # SEZIONE LOGO CENTRATO E TITOLO
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
+col1, col2, col3 = st.columns([2, 1, 1])
+with col1:
     logo = Image.open("./ferrari_app/logo_ferrari.jpg")
     st.image(logo, width=150)
 
