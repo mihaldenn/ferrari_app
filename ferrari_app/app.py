@@ -75,10 +75,10 @@ prodotti = [
     "MODULARI", "VETRO", "BAGNI", "ELETTRICO", "ARIA", "VMC", "ARREDI", "SOPPALCO"
 ]
 
-# 🔹 Definizione dati iniziali con valori specifici
+# 🔹 Definizione dati iniziali
 data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
-    "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],  
+    "Costo/mq": [50.0] * len(prodotti),
     "PT": [False] * len(prodotti),
     "P1": [False] * len(prodotti),
     "Stima PT": [0.0] * len(prodotti),
@@ -86,7 +86,7 @@ data_iniziale = pd.DataFrame({
     "Stima Totale": [0.0] * len(prodotti)
 })
 
-# 🔹 Inizializza la sessione con `data_iniziale` in modo sicuro
+# 🔹 Inizializza la sessione in modo sicuro
 if "editor" not in st.session_state or st.session_state["editor"] is None:
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
@@ -95,13 +95,14 @@ data_editable = pd.DataFrame(st.session_state["editor"])
 data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
 
 # 🔹 Calcolo automatico delle stime
-data_editable["Stima PT"] = data_editable.apply(
-    lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
+if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
+    data_editable["Stima PT"] = data_editable.apply(
+        lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
 
-data_editable["Stima P1"] = data_editable.apply(
-    lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
+    data_editable["Stima P1"] = data_editable.apply(
+        lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
 
-data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
+    data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
 # 🔹 Aggiorna la sessione dopo le modifiche
 if st.button("💾 Salva Modifiche"):
@@ -122,5 +123,28 @@ if not data_editable.empty:
     st.write(f"💰 **Totale con margine e costi variabili:** €{totale_con_margine}")
 
     st.subheader("Incidenza al mq")
+    st.write(f"🏠 **Piano Terra:** €{incidenza_pt} / mq")
+    st.write(f"🏠 **Piano Primo:** €{incidenza_p1} / mq")
+
+# ─────────────────────────────────────────────
+# SEZIONE ESPORTAZIONE PDF & EXCEL
+config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
+
+if st.button("💾 Scarica Preventivo in PDF"):
+    html = f"""
+    <h1>Preventivo - FerrariContract</h1>
+    <p>Cliente: <strong>{nome_cliente}</strong></p>
+    """
+    pdfkit.from_string(html, "preventivo.pdf", configuration=config)
+    with open("preventivo.pdf", "rb") as f:
+        st.download_button("⬇️ Scarica il PDF", f, file_name="preventivo_ferrari.pdf")
+
+if st.button("📥 Esporta Excel"):
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
+        data_editable.to_excel(writer, index=False, sheet_name="Preventivo")
+    buffer.seek(0)
+    st.download_button("📥 Scarica Excel", buffer, file_name="preventivo_ferrari.xlsx")
+
     st.write(f"🏠 **Piano Terra:** €{incidenza_pt} / mq")
     st.write(f"🏠 **Piano Primo:** €{incidenza_p1} / mq")
