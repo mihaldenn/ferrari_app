@@ -57,7 +57,7 @@ stile_ferrari()
 # SEZIONE LOGO CENTRATO E TITOLO
 
 col1, col2, col3 = st.columns([1, 2, 1])  # ✅ La colonna centrale è più grande per il bilanciamento perfetto!
-logo = Image.open("./logo_ferrari.jpg")  # ✅ Percorso corretto su Streamlit Cloud
+logo = Image.open("./ferrari_app/logo_ferrari.jpg")  # ✅ Percorso corretto su Streamlit Cloud
 st.image(logo, width=150)
 
 st.title("Preventivo – FerrariContract")
