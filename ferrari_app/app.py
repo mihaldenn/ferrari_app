@@ -87,7 +87,7 @@ data_iniziale = pd.DataFrame({
 })
 
 # 🔹 Inizializza la sessione in modo sicuro
-if "editor" not in st.session_state or st.session_state["editor"] is None:
+if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list):
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
 # 🔹 Usa una variabile temporanea per evitare errori con `st.data_editor`
