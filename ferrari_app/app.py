@@ -85,22 +85,13 @@ data_iniziale = pd.DataFrame({
     "Stima Totale": [0.0] * len(prodotti)
 })
 
-# 🔹 Inizializza session_state se necessario
-if "editor" not in st.session_state or not isinstance(st.session_state["editor"], pd.DataFrame):
+# 🔹 Inizializza la sessione in modo sicuro
+if "editor" not in st.session_state:
     st.session_state["editor"] = data_iniziale.copy()
 
-# 🔹 Permetti modifiche solo su alcune colonne
-data_editable = st.data_editor(
-    st.session_state["editor"], disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor"
-)
-
-# 🔹 Recupera i dati e verifica la conversione
-if "editor" in st.session_state:
-    try:
-        data_editable = pd.DataFrame(st.session_state["editor"])
-    except ValueError:
-        st.error("⚠️ Errore nella conversione dei dati!")
-        data_editable = data_iniziale.copy()
+# 🔹 Usa una variabile temporanea per evitare errori con `st.data_editor`
+data_temp = st.session_state["editor"].copy()
+data_editable = st.data_editor(data_temp, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
 
 # 🔹 Calcolo automatico delle stime
 if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
@@ -112,7 +103,7 @@ if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
 
     data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
-# 🔹 Aggiorna la sessione in modo sicuro
+# 🔹 Aggiorna la sessione dopo le modifiche
 st.session_state["editor"] = data_editable.copy()
 
 # ─────────────────────────────────────────────
