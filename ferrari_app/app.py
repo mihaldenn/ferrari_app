@@ -94,11 +94,13 @@ data_editable = st.data_editor(
 if "editor" in st.session_state:
     data_raw = st.session_state["editor"]
 
-    # ✅ Conversione sicura in DataFrame per evitare errori
-    if isinstance(data_raw, dict):
-        data_editable = pd.DataFrame.from_dict(data_raw)
+    # ✅ Assicura che i dati siano in un formato tabellare
+    if isinstance(data_raw, list):
+        data_editable = pd.DataFrame(data_raw)  # ✅ Se è una lista, converti direttamente
+    elif isinstance(data_raw, dict):
+        data_editable = pd.DataFrame.from_dict(data_raw, orient="columns")  # ✅ Conversione sicura per dizionari
     else:
-        data_editable = pd.DataFrame(data_raw)
+        st.error("⚠️ Errore: Formato dei dati non riconosciuto!")
 
     # ✅ Calcolo delle stime corretto
     data_editable["Stima PT"] = data_editable.apply(
