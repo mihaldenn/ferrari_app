@@ -96,8 +96,7 @@ if "editor" not in st.session_state or not isinstance(st.session_state["editor"]
 
 data_editable = pd.DataFrame(st.session_state["editor"])
 
-# 🔹 Mostra la tabella con dati modificabili
-st.header("Configura Prodotti e Costi")  
+# 🔹 Mostra la tabella con dati modificabili 
 if not data_editable.empty:
     data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], key="editor")
 else:
