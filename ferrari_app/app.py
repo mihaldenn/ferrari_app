@@ -92,6 +92,7 @@ data_editable = st.data_editor(
 
 # 🔹 Assicura che `st.session_state["editor"]` sia sempre un DataFrame valido
 if "editor" not in st.session_state or not isinstance(st.session_state["editor"], pd.DataFrame):
+    if "editor" not in st.session_state:
     st.session_state["editor"] = data_iniziale.copy()
 
 # 🔹 Recupera i dati della sessione
