@@ -104,10 +104,6 @@ if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
 
     data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
-# 🔹 Aggiorna la sessione dopo le modifiche
-if st.button("💾 Salva Modifiche"):
-    st.session_state["editor"] = data_tmp.to_dict(orient="records")  # ✅ Aggiorna sessione in modo sicuro!
-
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
 st.header("📊 Riepilogo Preventivo")
