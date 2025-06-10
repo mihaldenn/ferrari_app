@@ -104,7 +104,7 @@ if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
     data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
 # 🔹 Aggiorna la sessione dopo le modifiche
-
+st.session_state["editor"] = data_editable.to_dict(orient="records")  # ✅ Ora compatibile con Streamlit!
 
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
