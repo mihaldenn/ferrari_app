@@ -16,10 +16,12 @@ def stile_ferrari():
             background-color: #101012 !important;
         }
         .result-box {
+            width: 100% !important;
+            min-height: 250px;
             border: 3px solid #FFD300;
             background-color: white;
             color: black;
-            padding: 15px;
+            padding: 200px;
             border-radius: 10px;
             box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
             text-align: center;
