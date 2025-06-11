@@ -81,49 +81,32 @@ prodotti = [
 data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
-    "PT": [False] * 11 + [True],  # ✅ Solo SOPPALCO ha una checkbox attiva
-    "P1": [False] * 11 + [""]  # ✅ La colonna P1 è vuota per SOPPALCO
+    "PT": [False] * 11 + [True],  # 🔹 SOPPALCO ha solo una checkbox
+    "P1": [False] * 11 + [""]  # 🔹 La seconda colonna è vuota per SOPPALCO
 })
 
-# 🔹 Assicura che tutte le colonne siano presenti nel DataFrame
-if not {"Stima PT", "Stima P1", "Stima Totale"}.issubset(set(data_iniziale.columns)):
-    data_iniziale["Stima PT"] = 0.0
-    data_iniziale["Stima P1"] = 0.0
-    data_iniziale["Stima Totale"] = 0.0
+# 🔹 Stile per evidenziare la riga di SOPPALCO
+def style_soppalco(df):
+    styles = pd.DataFrame("", index=df.index, columns=df.columns)
+    styles.iloc[-1, -2] = "background-color: #FFD300; text-align: center; font-weight: bold;"
+    styles.iloc[-1, -1] = "visibility: hidden;"  # 🔹 Nasconde la seconda checkbox per SOPPALCO
+    return styles
 
-# 🔹 Inizializza la sessione con dati validi
-if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list) or not st.session_state["editor"]:
-    st.session_state["editor"] = data_iniziale.to_dict(orient="records")
+data_editable = data_iniziale.style.apply(style_soppalco, axis=None)
 
-data_editable = pd.DataFrame(st.session_state["editor"])
-
-# 🔹 Mostra la tabella con tutte le colonne e stile migliorato
+# 🔹 Mostra la tabella con checkbox corrette
 if not data_editable.empty:
-    st.data_editor(
-        data_editable, 
-        disabled=["Prodotto"],
-        height=460,
-        hide_index=True
-    )
+    data_editable = st.data_editor(data_editable, key="tabella_soppalco")
+
 else:
     st.warning("⚠️ Nessun dato disponibile per la tabella!")
 
-# 🔹 Calcolo automatico delle stime
-data_editable["Stima PT"] = data_editable.apply(
-    lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
-
-data_editable["Stima P1"] = data_editable.apply(
-    lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
-
-data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
-
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
-st.markdown('<div class="result-box">', unsafe_allow_html=True)
 st.header("📊 Riepilogo Preventivo")
 
 if not data_editable.empty:
-    totale = data_editable["Stima Totale"].sum()
+    totale = data_editable["Costo/mq"].sum()
     totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
     incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
     incidenza_p1 = round(totale_con_margine / superficie_p1, 2) if superficie_p1 else 0
@@ -135,9 +118,7 @@ if not data_editable.empty:
     st.subheader("Incidenza al mq")
     st.write(f"🏠 **Piano Terra:** €{incidenza_pt} / mq")
     st.write(f"🏠 **Piano Primo:** €{incidenza_p1} / mq")
-
-st.markdown('</div>', unsafe_allow_html=True)
-
+    
 # ─────────────────────────────────────────────
 # FUNZIONI DI DOWNLOAD
 def scarica_excel(df):
