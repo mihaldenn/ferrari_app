@@ -88,9 +88,6 @@ data_iniziale = pd.DataFrame({
     "Stima Totale": [0.0] * len(prodotti)
 })
 
-def colora_prima_riga(df):
-    return [f"background-color: #FFD300; font-weight: bold;" if i == 0 else "" for i in range(len(df))]
-
 data_editable = data_editable.style.apply(colora_prima_riga, axis=0)
 
 # 🔹 Inizializza la sessione con dati validi
