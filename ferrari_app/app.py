@@ -1,9 +1,6 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
-import pdfkit
-import io
-import xlsxwriter
 
 # ─────────────────────────────────────────────
 # CONFIGURAZIONE GENERALE
@@ -14,12 +11,11 @@ def stile_ferrari():
     <style>
         html, body, [data-testid="stAppViewContainer"] {
             background-color: white !important;
-            color: black !important;
         }
         .result-box {
-            border: 3px solid #FFD300;
+            border: 3px solid #FFD300; /* Bordo giallo logo */
             background-color: white;
-            color: black !important;
+            color: black;
             padding: 15px;
             border-radius: 10px;
             box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
@@ -27,14 +23,7 @@ def stile_ferrari():
             font-size: 18px;
             margin-top: 20px;
         }
-        .stDataEditor {
-            background-color: white !important;
-            color: black !important;
-        }
-        th, td {
-            border: 1px solid #DDD !important;
-            padding: 8px !important;
-        }
+        /* Nasconde la seconda checkbox della riga SOPPALCO */
         tr:nth-child(12) td:nth-child(4) {
             display: none !important;
         }
@@ -44,14 +33,14 @@ def stile_ferrari():
 stile_ferrari()
 
 # ─────────────────────────────────────────────
-# SEZIONE LOGO E TITOLO
+# SEZIONE LOGO CENTRATO E TITOLO
 col1, col2, col3 = st.columns([5, 1, 1])
 with col1:
     logo = Image.open("./ferrari_app/logo_ferrari.jpg")
     st.image(logo, width=150)
 
 st.markdown(
-    "<h1 style='text-align: center; color: black;'>Stima Calcolo Preventivo - [BETA]</h1>",
+    "<h1 style='text-align: center; color: white;'>Stima Calcolo Preventivo - [BETA]</h1>",
     unsafe_allow_html=True
 )
 
@@ -81,32 +70,47 @@ prodotti = [
 data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
-    "PT": [False] * 11 + [True],  # 🔹 SOPPALCO ha solo una checkbox
-    "P1": [False] * 11 + [""]  # 🔹 La seconda colonna è vuota per SOPPALCO
+    "PT": [False] * 11 + [True],  # ✅ Solo SOPPALCO ha una checkbox attiva
+    "P1": [False] * 11 + [""]  # ✅ La colonna P1 è vuota per SOPPALCO
 })
 
-# 🔹 Stile per evidenziare la riga di SOPPALCO
-def style_soppalco(df):
-    styles = pd.DataFrame("", index=df.index, columns=df.columns)
-    styles.iloc[-1, -2] = "background-color: #FFD300; text-align: center; font-weight: bold;"
-    styles.iloc[-1, -1] = "visibility: hidden;"  # 🔹 Nasconde la seconda checkbox per SOPPALCO
-    return styles
+# 🔹 Inizializza la sessione con dati validi
+if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list) or not st.session_state["editor"]:
+    st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
-data_editable = data_iniziale.style.apply(style_soppalco, axis=None)
+if isinstance(st.session_state["editor"], list) and len(st.session_state["editor"]) > 0:
+    data_editable = pd.DataFrame(st.session_state["editor"])
+else:
+    data_editable = pd.DataFrame(data_iniziale)
 
-# 🔹 Mostra la tabella con checkbox corrette
+# 🔹 Mostra la tabella con dati modificabili 
 if not data_editable.empty:
-    data_editable = st.data_editor(data_editable, key="tabella_soppalco")
-
+    data_editable = st.data_editor(
+        data_editable, 
+        disabled=["Prodotto"],
+        height=460,
+        hide_index=True
+    )
 else:
     st.warning("⚠️ Nessun dato disponibile per la tabella!")
 
+# 🔹 Calcolo automatico delle stime
+if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
+    data_editable["Stima PT"] = data_editable.apply(
+        lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
+
+    data_editable["Stima P1"] = data_editable.apply(
+        lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
+
+    data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
+
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
+st.markdown('<div class="result-box">', unsafe_allow_html=True)
 st.header("📊 Riepilogo Preventivo")
 
 if not data_editable.empty:
-    totale = data_editable["Costo/mq"].sum()
+    totale = data_editable["Stima Totale"].sum()
     totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
     incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
     incidenza_p1 = round(totale_con_margine / superficie_p1, 2) if superficie_p1 else 0
@@ -118,20 +122,6 @@ if not data_editable.empty:
     st.subheader("Incidenza al mq")
     st.write(f"🏠 **Piano Terra:** €{incidenza_pt} / mq")
     st.write(f"🏠 **Piano Primo:** €{incidenza_p1} / mq")
-    
-# ─────────────────────────────────────────────
-# FUNZIONI DI DOWNLOAD
-def scarica_excel(df):
-    output = io.BytesIO()
-    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
-        df.to_excel(writer, sheet_name="Preventivo", index=False)
-    output.seek(0)
-    return output
 
-def scarica_pdf(df):
-    html = df.to_html()
-    pdf_file = pdfkit.from_string(html, False)
-    return io.BytesIO(pdf_file)
-
-st.download_button("📥 Scarica Excel", data=scarica_excel(data_editable), file_name="preventivo.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-st.download_button("📥 Scarica PDF", data=scarica_pdf(data_editable), file_name="preventivo.pdf", mime="application/pdf")
+st.markdown('</div>', unsafe_allow_html=True)
+/pdf")
