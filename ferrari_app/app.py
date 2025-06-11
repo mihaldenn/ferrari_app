@@ -93,6 +93,7 @@ if not data_editable.empty:
     data_editable, 
     disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"],
     height=460  # 🔹 Imposta una altezza maggiore per evitare lo scroll
+    hide_index=True
 )
 
 else:
