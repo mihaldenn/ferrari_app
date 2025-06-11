@@ -16,20 +16,6 @@ def stile_ferrari():
     background-color: #f2f2f2;  /* Grigio chiaro */
     color: #333333;  /* Testo in grigio scuro */
 }
-
-st.markdown(""
-    <style>
-        stDataFrame input[type="checkbox"], .stDataEditor input[type="checkbox"] {
-            width: 100% !important;
-            height: 100% !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            background-color: white !important;
-        }
-    </style>
-"", unsafe_allow_html=True)
-
         h1, h2, h3 {
            color: white;
             text-align: center;
