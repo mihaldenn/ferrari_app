@@ -16,11 +16,12 @@ st.markdown("""
         color: black !important;
     }
 
-    h1, h2, h3, h4, h5, h6, p, div, span, label, input, select, textarea {
+    /* Testi generali */
+    h1, h2, h3, h4, h5, h6, p, span, label, input, select, textarea, div {
         color: black !important;
     }
 
-    /* Riquadro riepilogo */
+    /* Box riepilogo */
     .result-box {
         border: 3px solid #FFD300 !important;
         background-color: white !important;
@@ -33,15 +34,14 @@ st.markdown("""
         width: 80% !important;
         margin-left: auto !important;
         margin-right: auto !important;
-        color: black !important;
     }
 
     .result-box * {
         color: black !important;
     }
 
-    /* Pulsanti */
-    .stButton button, .stDownloadButton button, button[kind="download"] {
+    /* Pulsanti download e standard */
+    [data-testid="baseButton-secondary"], button {
         background-color: #878787 !important;
         color: white !important;
         font-weight: bold !important;
@@ -52,24 +52,23 @@ st.markdown("""
         box-shadow: none !important;
     }
 
-    .stButton button:hover, .stDownloadButton button:hover, button[kind="download"]:hover {
-        background-color: #6e6e6e !important;
+    [data-testid="baseButton-secondary"]:hover, button:hover {
+        background-color: #707070 !important;
     }
 
-    /* Tabella */
-    .stDataFrame, .stDataEditor, .stEditableTable {
-        background-color: #878787 !important;
-        color: black !important;
-        border: none !important;
-    }
-
-    .stDataEditor div[role="gridcell"] {
+    /* Tabella editor (celle, intestazione, sfondo) */
+    [data-testid="stDataEditorGrid"] {
         background-color: #878787 !important;
         color: black !important;
     }
 
-    .stDataEditor thead {
-        background-color: #7a7a7a !important;
+    [data-testid="stDataEditorGrid"] div[role="gridcell"] {
+        background-color: #878787 !important;
+        color: black !important;
+    }
+
+    [data-testid="stDataEditorGrid"] thead, [data-testid="stDataEditorGrid"] thead * {
+        background-color: #777777 !important;
         color: white !important;
     }
 </style>
