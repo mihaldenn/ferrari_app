@@ -26,7 +26,7 @@ st.markdown("""
             justify-content: center !important;
             align-items: center !important;
             background-color: white !important;
-            box-shadow: 0 0 5 rgba(0, 0, 0, 0.1);  /* 🔹 Rimosso il px */
+            box-shadow: 0 0 5 rgba(0, 0, 0, 0.1);  /*
 width: 100%;
 height: 50%;
         }
