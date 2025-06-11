@@ -13,7 +13,7 @@ def stile_ferrari():
     st.markdown("""
     <style>
         html, body, [data-testid="stAppViewContainer"] {
-            background-color: #272b2f !important;
+            background-color: #282b30 !important;
         }
         .result-box {
             border: 3px solid #FFD300;
@@ -72,7 +72,7 @@ prodotti = [
 data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
-    "PT": [False] * 11 + [True],  # ✅ Solo SOPPALCO ha una checkbox attiva
+    "PT": [False] * 11 + [False],  # ✅ Solo SOPPALCO ha una checkbox attiva
     "P1": [False] * 11 + [None]  # ✅ La colonna P1 è vuota per SOPPALCO
 })
 
