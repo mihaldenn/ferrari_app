@@ -10,21 +10,17 @@ import xlsxwriter
 st.set_page_config(page_title="Stima Calcolo Preventivo", layout="wide")
 
 def stile_ferrari():
-   st.markdown("""
+st.markdown("""
     <style>
-        html, body {
-    background-color: #f2f2f2;  /* Grigio chiaro */
-    color: #333333;  /* Testo in grigio scuro */
-}
-        h1, h2, h3 {
-           color: white;
-            text-align: center;
+        /* Imposta lo sfondo completamente bianco */
+        html, body, [data-testid="stAppViewContainer"] {
+            background-color: white !important;
         }
     </style>
 """, unsafe_allow_html=True)
-st.markdown("""
+
     <style>
-        /* Nasconde la seconda checkbox di SOPPALCO */
+    #    /* Nasconde la seconda checkbox di SOPPALCO */
         tr:nth-child(12) td:nth-child(4) {
             display: none !important;
         }
