@@ -14,17 +14,22 @@ def stile_ferrari():
     <style>
         html, body, [data-testid="stAppViewContainer"] {
             background-color: white !important;
+            color: black !important;
         }
         .result-box {
             border: 3px solid #FFD300;
             background-color: white;
-            color: black;
+            color: black !important;
             padding: 15px;
             border-radius: 10px;
             box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
             text-align: center;
             font-size: 18px;
             margin-top: 20px;
+        }
+        .stDataEditor {
+            background-color: white !important;
+            color: black !important;
         }
         tr:nth-child(12) td:nth-child(4) {
             display: none !important;
@@ -87,7 +92,7 @@ else:
 
 # 🔹 Mostra la tabella con dati modificabili 
 if not data_editable.empty:
-    data_editable = st.data_editor(
+    st.data_editor(
         data_editable, 
         disabled=["Prodotto"],
         height=460,
