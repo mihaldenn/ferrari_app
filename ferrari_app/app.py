@@ -17,7 +17,7 @@ def stile_ferrari():
     color: #333333;  /* Testo in grigio scuro */
 }
 
-st.markdown("""
+st.markdown(""
     <style>
         stDataFrame input[type="checkbox"], .stDataEditor input[type="checkbox"] {
             width: 100% !important;
@@ -28,7 +28,7 @@ st.markdown("""
             background-color: white !important;
         }
     </style>
-""", unsafe_allow_html=True)
+"", unsafe_allow_html=True)
 
         h1, h2, h3 {
            color: white;
