@@ -85,14 +85,17 @@ data_iniziale = pd.DataFrame({
     "P1": [False] * 11 + [""]  # ✅ La colonna P1 è vuota per SOPPALCO
 })
 
+# 🔹 Assicura che tutte le colonne siano presenti nel DataFrame
+if not {"Stima PT", "Stima P1", "Stima Totale"}.issubset(set(data_iniziale.columns)):
+    data_iniziale["Stima PT"] = 0.0
+    data_iniziale["Stima P1"] = 0.0
+    data_iniziale["Stima Totale"] = 0.0
+
 # 🔹 Inizializza la sessione con dati validi
 if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list) or not st.session_state["editor"]:
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
-if isinstance(st.session_state["editor"], list) and len(st.session_state["editor"]) > 0:
-    data_editable = pd.DataFrame(st.session_state["editor"])
-else:
-    data_editable = pd.DataFrame(data_iniziale)
+data_editable = pd.DataFrame(st.session_state["editor"])
 
 # 🔹 Mostra la tabella con tutte le colonne e stile migliorato
 if not data_editable.empty:
@@ -100,21 +103,19 @@ if not data_editable.empty:
         data_editable, 
         disabled=["Prodotto"],
         height=460,
-        hide_index=True,
-        columns=["Prodotto", "Costo/mq", "PT", "P1", "Stima PT", "Stima P1", "Stima Totale"] # ✅ Mostra tutte le colonne
+        hide_index=True
     )
 else:
     st.warning("⚠️ Nessun dato disponibile per la tabella!")
 
 # 🔹 Calcolo automatico delle stime
-if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
-    data_editable["Stima PT"] = data_editable.apply(
-        lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
+data_editable["Stima PT"] = data_editable.apply(
+    lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
 
-    data_editable["Stima P1"] = data_editable.apply(
-        lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
+data_editable["Stima P1"] = data_editable.apply(
+    lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
 
-    data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
+data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
 # ─────────────────────────────────────────────
 # SEZIONE RISULTATI FINALI
