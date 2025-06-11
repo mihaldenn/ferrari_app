@@ -15,10 +15,13 @@ st.markdown("""
         background-color: white !important;
         color: black !important;
     }
+
+    /* Colore testo generale */
     h1, h2, h3, h4, h5, h6, p, div, span, label, input, select, textarea {
         color: black !important;
     }
 
+    /* Stile del box dei risultati */
     .result-box {
         border: 3px solid #FFD300;
         background-color: white;
@@ -34,16 +37,15 @@ st.markdown("""
     }
 
     .result-box * {
-        color: black !important;  /* 🔧 Forziamo nero solo nel blocco */
+        color: black !important;
     }
 
     .result-box p {
         margin: 8px 0;
     }
 
-    /* ✅ Pulsanti in grigio */
-    .stDownloadButton > button, .stButton > button {
-        background-color: #7d7d7d !important;
+    button[kind="download"], .stDownloadButton > button, .stButton > button {
+        background-color: #878787 !important;
         color: white !important;
         border: none;
         padding: 8px 16px;
@@ -52,13 +54,24 @@ st.markdown("""
         cursor: pointer;
     }
 
-    .stDownloadButton > button:hover, .stButton > button:hover {
-        background-color: #6a6a6a !important;
+    button[kind="download"]:hover, .stDownloadButton > button:hover, .stButton > button:hover {
+        background-color: #737373 !important;
     }
 
-    .stDataEditor {
-        background-color: white !important;
+    .stDataFrame, .stDataEditor, .stEditableTable {
+        background-color: #878787 !important;
         color: black !important;
+    }
+
+    /* Celle della tabella: sfondo + testo */
+    .stDataEditor div[role="gridcell"] {
+        background-color: #878787 !important;
+        color: black !important;
+    }
+
+    /* Header della tabella */
+    .stDataEditor thead {
+        background-color: #787878 !important;
     }
 </style>
 """, unsafe_allow_html=True)
