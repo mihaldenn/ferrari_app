@@ -17,33 +17,32 @@ st.markdown("""
         color: black !important;
     }
 
-    /* Testo generale */
+    /* Testo base nero */
     h1, h2, h3, h4, h5, h6, p, span, label, input, select, textarea, div {
         color: black !important;
     }
 
-    /* 🔹 Riquadro riepilogo con testo nero e sfondo grigio */
+    /* Riquadro riepilogo */
     .result-box {
-        border: 3px solid #FFD300 !important;
         background-color: #878787 !important;
+        border: 3px solid #FFD300 !important;
         padding: 20px !important;
         border-radius: 10px !important;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.1) !important;
-        text-align: center !important;
         font-size: 18px !important;
         margin-top: 20px !important;
         width: 80% !important;
         margin-left: auto !important;
         margin-right: auto !important;
-        color: black !important;
+        text-align: center !important;
     }
 
     .result-box * {
         color: black !important;
     }
 
-    /* 🔹 Tasti sotto con sfondo nero e testo bianco */
-    .stDownloadButton button, .stButton button, button[kind="download"] {
+    /* 🔹 Pulsanti sotto — testo bianco, sfondo nero */
+    .stDownloadButton button, .stButton button, button[kind="download"],
+    [data-testid="baseButton-secondary"] {
         background-color: #000000 !important;
         color: white !important;
         font-weight: bold !important;
@@ -53,15 +52,20 @@ st.markdown("""
         cursor: pointer !important;
     }
 
-    .stDownloadButton button:hover, .stButton button:hover {
+    .stDownloadButton button:hover, .stButton button:hover, [data-testid="baseButton-secondary"]:hover {
         background-color: #222222 !important;
     }
 
-    /* 🔹 Intestazioni della tabella con testo bianco su sfondo nero */
+    /* 🔹 Barre sopra tabella (intestazioni) — testo bianco, sfondo nero */
     [data-testid="stDataEditorGrid"] thead,
     [data-testid="stDataEditorGrid"] thead * {
         background-color: #000000 !important;
         color: white !important;
+    }
+
+    /* 🔹 Celle della tabella — testo nero, sfondo chiaro */
+    [data-testid="stDataEditorGrid"] div[role="gridcell"] {
+        color: black !important;
     }
 </style>
 """, unsafe_allow_html=True)
