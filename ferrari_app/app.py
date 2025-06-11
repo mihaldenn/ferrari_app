@@ -42,7 +42,7 @@ with col1:
     st.image(logo, width=150)
 
 st.markdown(
-    "<h1 style='text-align: center; color: black;'>Stima Calcolo Preventivo - [BETA]</h1>",
+    "<h1 style='text-align: center; color: white;'>Stima Calcolo Preventivo - [BETA]</h1>",
     unsafe_allow_html=True
 )
 
