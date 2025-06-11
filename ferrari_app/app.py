@@ -19,16 +19,14 @@ def stile_ferrari():
 
 st.markdown("""
     <style>
-        stDataFrame input[type="checkbox"], .stDataEditor input[type="checkbox"] {
+        .stDataFrame input[type="checkbox"], .stDataEditor input[type="checkbox"] {
             width: 100% !important;
             height: 100% !important;
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
             background-color: white !important;
-            box-shadow: 0 0 5 rgba(0, 0, 0, 0.1);  /*
-width: 100%;
-height: 50%;
+            box-shadow: 0 0 5 rgba(0, 0, 0, 0.1) !important;
         }
     </style>
 """, unsafe_allow_html=True)
