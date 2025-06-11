@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
+import pdfkit
+import io
+import xlsxwriter
 
 # ─────────────────────────────────────────────
 # CONFIGURAZIONE GENERALE
@@ -13,7 +16,7 @@ def stile_ferrari():
             background-color: white !important;
         }
         .result-box {
-            border: 3px solid #FFD300; /* Bordo giallo logo */
+            border: 3px solid #FFD300;
             background-color: white;
             color: black;
             padding: 15px;
@@ -23,7 +26,6 @@ def stile_ferrari():
             font-size: 18px;
             margin-top: 20px;
         }
-        /* Nasconde la seconda checkbox della riga SOPPALCO */
         tr:nth-child(12) td:nth-child(4) {
             display: none !important;
         }
@@ -33,14 +35,14 @@ def stile_ferrari():
 stile_ferrari()
 
 # ─────────────────────────────────────────────
-# SEZIONE LOGO CENTRATO E TITOLO
+# SEZIONE LOGO E TITOLO
 col1, col2, col3 = st.columns([5, 1, 1])
 with col1:
     logo = Image.open("./ferrari_app/logo_ferrari.jpg")
     st.image(logo, width=150)
 
 st.markdown(
-    "<h1 style='text-align: center; color: white;'>Stima Calcolo Preventivo - [BETA]</h1>",
+    "<h1 style='text-align: center; color: black;'>Stima Calcolo Preventivo - [BETA]</h1>",
     unsafe_allow_html=True
 )
 
@@ -124,4 +126,35 @@ if not data_editable.empty:
     st.write(f"🏠 **Piano Primo:** €{incidenza_p1} / mq")
 
 st.markdown('</div>', unsafe_allow_html=True)
-/pdf")
+
+# ─────────────────────────────────────────────
+# FUNZIONI DI DOWNLOAD
+def scarica_excel(df):
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+        df.to_excel(writer, sheet_name="Preventivo", index=False)
+    output.seek(0)
+    return output
+
+def scarica_pdf(df):
+    html = df.to_html()
+    pdf_file = pdfkit.from_string(html, False)
+    return io.BytesIO(pdf_file)
+
+# 🔹 Pulsante per scaricare Excel
+excel_file = scarica_excel(data_editable)
+st.download_button(
+    label="📥 Scarica Excel",
+    data=excel_file,
+    file_name="preventivo.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
+
+# 🔹 Pulsante per scaricare PDF
+pdf_file = scarica_pdf(data_editable)
+st.download_button(
+    label="📥 Scarica PDF",
+    data=pdf_file,
+    file_name="preventivo.pdf",
+    mime="application/pdf"
+)
