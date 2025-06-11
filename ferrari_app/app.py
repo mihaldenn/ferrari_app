@@ -19,15 +19,15 @@ def stile_ferrari():
 
 st.markdown("""
     <style>
-        /* Forza le checkbox nella tabella */
+        /* Forza le checkbox a occupare tutto lo spazio disponibile */
         .stDataFrame input[type="checkbox"], .stDataEditor input[type="checkbox"] {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: white;
-            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            background-color: white !important;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1) !important;
         }
     </style>
 """, unsafe_allow_html=True)
