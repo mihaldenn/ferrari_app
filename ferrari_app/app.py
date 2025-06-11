@@ -31,6 +31,10 @@ def stile_ferrari():
             background-color: white !important;
             color: black !important;
         }
+        th, td {
+            border: 1px solid #DDD !important;
+            padding: 8px !important;
+        }
         tr:nth-child(12) td:nth-child(4) {
             display: none !important;
         }
@@ -90,13 +94,14 @@ if isinstance(st.session_state["editor"], list) and len(st.session_state["editor
 else:
     data_editable = pd.DataFrame(data_iniziale)
 
-# 🔹 Mostra la tabella con dati modificabili 
+# 🔹 Mostra la tabella con tutte le colonne e stile migliorato
 if not data_editable.empty:
     st.data_editor(
         data_editable, 
         disabled=["Prodotto"],
         height=460,
-        hide_index=True
+        hide_index=True,
+        columns=["Prodotto", "Costo/mq", "PT", "P1", "Stima PT", "Stima P1", "Stima Totale"] # ✅ Mostra tutte le colonne
     )
 else:
     st.warning("⚠️ Nessun dato disponibile per la tabella!")
@@ -146,20 +151,5 @@ def scarica_pdf(df):
     pdf_file = pdfkit.from_string(html, False)
     return io.BytesIO(pdf_file)
 
-# 🔹 Pulsante per scaricare Excel
-excel_file = scarica_excel(data_editable)
-st.download_button(
-    label="📥 Scarica Excel",
-    data=excel_file,
-    file_name="preventivo.xlsx",
-    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-)
-
-# 🔹 Pulsante per scaricare PDF
-pdf_file = scarica_pdf(data_editable)
-st.download_button(
-    label="📥 Scarica PDF",
-    data=pdf_file,
-    file_name="preventivo.pdf",
-    mime="application/pdf"
-)
+st.download_button("📥 Scarica Excel", data=scarica_excel(data_editable), file_name="preventivo.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+st.download_button("📥 Scarica PDF", data=scarica_pdf(data_editable), file_name="preventivo.pdf", mime="application/pdf")
