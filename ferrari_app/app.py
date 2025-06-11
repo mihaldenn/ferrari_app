@@ -28,7 +28,7 @@ st.markdown("""
             justify-content: center;
             align-items: center;
             background-color: white;
-            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 5 rgba(0, 0, 0, 0.1);
         }
     </style>
 """, unsafe_allow_html=True)
