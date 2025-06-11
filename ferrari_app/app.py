@@ -101,8 +101,8 @@ prodotti = [
 data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
-    "PT": [False] * 11 + [True],
-    "P1": [False] * 11 + [""]
+    "PT": [False] * 11 + [False],
+    "P1": [False] * 11 + [None]
 })
 
 if not {"Stima PT", "Stima P1", "Stima Totale"}.issubset(data_iniziale.columns):
