@@ -19,11 +19,16 @@ def stile_ferrari():
 
 st.markdown("""
     <style>
-        table td input[type="checkbox"] {
+        /* Seleziona specificamente tutte le checkbox nella tabella */
+        .stDataFrame input[type="checkbox"] {
             width: 100%;
             height: 100%;
-            border-radius: 10px; /* 🔹 Aggiunge angoli stondati */
-            display: block;
+            border-radius: 10px !important; /* 🔹 Usa !important per forzare lo stile */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
 """, unsafe_allow_html=True)
