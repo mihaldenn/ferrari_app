@@ -92,7 +92,7 @@ if not data_editable.empty:
     data_editable = st.data_editor(
     data_editable, 
     disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"],
-    height=475  # 🔹 Imposta una altezza maggiore per evitare lo scroll
+    height=460  # 🔹 Imposta una altezza maggiore per evitare lo scroll
 )
 
 else:
