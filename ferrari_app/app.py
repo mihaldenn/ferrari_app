@@ -19,7 +19,6 @@ def stile_ferrari():
 
 st.markdown("""
     <style>
-        /* Modifica le checkbox nella tabella */
         input[type="checkbox"] {
             width: 100%;
             height: 100%;
