@@ -15,17 +15,8 @@ st.markdown("""
         background-color: white !important;
         color: black !important;
     }
-    label, input, select, textarea, .stTextInput, .stNumberInput, .stSlider {
+    h1, h2, h3, h4, h5, h6, p, div, span, label, input, select, textarea {
         color: black !important;
-    }
-    h1, h2, h3, h4, h5, h6, p, div, span {
-        color: black !important;
-    }
-    .stMarkdown {
-        color: black !important;
-    }
-    .stButton>button {
-        color: inherit;
     }
     .result-box {
         border: 3px solid #FFD300;
@@ -44,8 +35,24 @@ st.markdown("""
     .result-box p {
         margin: 8px 0;
     }
-    .stDataEditor, .stDownloadButton {
-        color: unset !important; /* NON tocco tabelle e download */
+
+    .stDownloadButton > button, .stButton > button {
+        background-color: #7d7d7d !important;
+        color: white !important;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .stDownloadButton > button:hover, .stButton > button:hover {
+        background-color: #6a6a6a !important;
+    }
+
+    .stDataEditor {
+        background-color: white !important;
+        color: black !important;
     }
 </style>
 """, unsafe_allow_html=True)
