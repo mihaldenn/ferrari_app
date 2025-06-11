@@ -19,11 +19,10 @@ def stile_ferrari():
 
 st.markdown("""
     <style>
-        /* Seleziona specificamente tutte le checkbox nella tabella */
-        .stDataFrame input[type="checkbox"] {
+        input[type="checkbox"] {
             width: 100%;
             height: 100%;
-            border-radius: 10px; /*
+            border-radius: 10px;  /* ✅ Questa sintassi è corretta */
             display: flex;
             justify-content: center;
             align-items: center;
