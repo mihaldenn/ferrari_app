@@ -13,7 +13,7 @@ def stile_ferrari():
     st.markdown("""
     <style>
         html, body, [data-testid="stAppViewContainer"] {
-            background-color: white !important;
+            background-color: #272b2f !important;
         }
         .result-box {
             border: 3px solid #FFD300;
