@@ -33,7 +33,7 @@ with col1:
     st.image(logo, width=150)
 
 st.markdown(
-    "<h1 style='text-align: center; color: black;'>Stima Calcolo Preventivo - [BETA]</h1>",
+    "<h1 style='text-align: center; color: white;'>Stima Calcolo Preventivo - [BETA]</h1>",
     unsafe_allow_html=True
 )
 
@@ -53,6 +53,15 @@ st.write(f"**Cliente selezionato:** {nome_cliente}")
 # ─────────────────────────────────────────────
 # SEZIONE TABELLA PRODOTTI
 st.header("Configura Prodotti e Costi")
+
+st.markdown("""
+    <style>
+        input[type="checkbox"]:checked {
+            background-color: yellow !important;
+            border: 2px solid black !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 prodotti = [
     "PAVIMENTO", "SOPRAELEVATO", "CONTROSOFFITTO", "CARTONGESSO DELTA 125/175",
