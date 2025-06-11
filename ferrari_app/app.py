@@ -67,10 +67,9 @@ data_iniziale = pd.DataFrame({
         "MODULARI", "VETRO", "BAGNI", "ELETTRICO", "ARIA", "VMC", "ARREDI", "SOPPALCO"
     ],
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
-       "PT": [False] * len(prodotti),
-    "P1": [False] * len(prodotti),  # 🔹 Correzione: "PI" → "P1"
+       "PT/P1": [False] * 11 + [False],
     "Stima PT": [0.0] * len(prodotti),
-    "Stima P1": [0.0] * len(prodotti),  # 🔹 Correzione: "Stima PI" → "Stima P1"
+    "Stima P1": [0.0] * len(prodotti),
     "Stima Totale": [0.0] * len(prodotti)
 })
 
