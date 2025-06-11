@@ -88,15 +88,6 @@ data_iniziale = pd.DataFrame({
     "Stima Totale": [0.0] * len(prodotti)
 })
 
-st.markdown("""
-    <style>
-        /* Nasconde la seconda checkbox di SOPPALCO */
-        tr:nth-child(12) td:nth-child(4) {
-            visibility: hidden !important;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 # 🔹 Inizializza la sessione con dati validi
 if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list) or not st.session_state["editor"]:
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
