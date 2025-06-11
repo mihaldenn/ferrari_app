@@ -16,62 +16,61 @@ st.markdown("""
         color: black !important;
     }
 
-    /* Colore testo generale */
     h1, h2, h3, h4, h5, h6, p, div, span, label, input, select, textarea {
         color: black !important;
     }
 
-    /* Stile del box dei risultati */
+    /* Riquadro riepilogo */
     .result-box {
-        border: 3px solid #FFD300;
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
-        text-align: center;
-        font-size: 18px;
-        margin-top: 20px;
-        width: 80%;
-        margin-left: auto;
-        margin-right: auto;
+        border: 3px solid #FFD300 !important;
+        background-color: white !important;
+        padding: 20px !important;
+        border-radius: 10px !important;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.1) !important;
+        text-align: center !important;
+        font-size: 18px !important;
+        margin-top: 20px !important;
+        width: 80% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        color: black !important;
     }
 
     .result-box * {
         color: black !important;
     }
 
-    .result-box p {
-        margin: 8px 0;
-    }
-
-    button[kind="download"], .stDownloadButton > button, .stButton > button {
+    /* Pulsanti */
+    .stButton button, .stDownloadButton button, button[kind="download"] {
         background-color: #878787 !important;
         color: white !important;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-weight: bold;
-        cursor: pointer;
+        font-weight: bold !important;
+        border: none !important;
+        padding: 8px 16px !important;
+        border-radius: 6px !important;
+        cursor: pointer !important;
+        box-shadow: none !important;
     }
 
-    button[kind="download"]:hover, .stDownloadButton > button:hover, .stButton > button:hover {
-        background-color: #737373 !important;
+    .stButton button:hover, .stDownloadButton button:hover, button[kind="download"]:hover {
+        background-color: #6e6e6e !important;
     }
 
+    /* Tabella */
     .stDataFrame, .stDataEditor, .stEditableTable {
         background-color: #878787 !important;
         color: black !important;
+        border: none !important;
     }
 
-    /* Celle della tabella: sfondo + testo */
     .stDataEditor div[role="gridcell"] {
         background-color: #878787 !important;
         color: black !important;
     }
 
-    /* Header della tabella */
     .stDataEditor thead {
-        background-color: #787878 !important;
+        background-color: #7a7a7a !important;
+        color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
