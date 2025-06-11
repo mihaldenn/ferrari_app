@@ -19,7 +19,6 @@ def stile_ferrari():
 
 st.markdown("""
     <style>
-        /* Forza le checkbox a occupare tutto lo spazio disponibile */
         .stDataFrame input[type="checkbox"], .stDataEditor input[type="checkbox"] {
             width: 100% !important;
             height: 100% !important;
@@ -27,7 +26,9 @@ st.markdown("""
             justify-content: center !important;
             align-items: center !important;
             background-color: white !important;
-            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 0 5 rgba(0, 0, 0, 0.1);  /* 🔹 Rimosso il px */
+width: 100%;
+height: 50%;
         }
     </style>
 """, unsafe_allow_html=True)
