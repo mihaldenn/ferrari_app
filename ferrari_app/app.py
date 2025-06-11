@@ -89,7 +89,7 @@ else:
 
 # 🔹 Mostra la tabella con dati modificabili 
 if not data_editable.empty:
-    data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"], keys="editor", height=800)
+    data_editable = st.data_editor(data_editable, disabled=["Prodotto", "Stima PT", "Stima P1", "Stima Totale"])
 else:
     st.warning("⚠️ Nessun dato disponibile per la tabella!")
 
