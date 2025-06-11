@@ -11,20 +11,21 @@ st.set_page_config(page_title="Stima Calcolo Preventivo", layout="wide")
 # STILE
 st.markdown("""
 <style>
+    /* Sfondo generale */
     html, body, [data-testid="stAppViewContainer"] {
         background-color: white !important;
         color: black !important;
     }
 
-    /* Testi generali */
+    /* Testi principali */
     h1, h2, h3, h4, h5, h6, p, span, label, input, select, textarea, div {
         color: black !important;
     }
 
-    /* Box riepilogo */
+    /* 🔹 Riquadro risultati con grigio visibile */
     .result-box {
         border: 3px solid #FFD300 !important;
-        background-color: white !important;
+        background-color: #878787 !important;
         padding: 20px !important;
         border-radius: 10px !important;
         box-shadow: 5px 5px 10px rgba(0,0,0,0.1) !important;
@@ -34,38 +35,32 @@ st.markdown("""
         width: 80% !important;
         margin-left: auto !important;
         margin-right: auto !important;
+        color: black !important;
     }
 
     .result-box * {
         color: black !important;
     }
 
-    /* Pulsanti */
-    [data-testid="baseButton-secondary"], .stDownloadButton button, .stButton button {
-        background-color: #878787 !important;
+    /* 🔹 Tasti di download e pulsanti con sfondo nero e testo bianco */
+    .stDownloadButton button, .stButton button, button[kind="download"] {
+        background-color: #000000 !important;
         color: white !important;
-        font-weight: bold !important;
         border: none !important;
         padding: 8px 16px !important;
         border-radius: 6px !important;
+        font-weight: bold !important;
         cursor: pointer !important;
     }
 
-    /* Tabella: celle e sfondo */
-    [data-testid="stDataEditorGrid"] {
-        background-color: #878787 !important;
+    .stDownloadButton button:hover, .stButton button:hover {
+        background-color: #333333 !important;
     }
 
-    [data-testid="stDataEditorGrid"] div[role="gridcell"],
-    [data-testid="stDataEditorGrid"] div[role="row"],
-    [data-testid="stDataEditorGrid"] div[role="columnheader"] {
-        background-color: #878787 !important;
-        color: black !important;
-        border: 1px solid #cccccc !important;
-    }
-
-    [data-testid="stDataEditorGrid"] thead {
-        background-color: #7a7a7a !important;
+    /* 🔹 Tabella: barre con testo bianco */
+    [data-testid="stDataEditorGrid"] thead,
+    [data-testid="stDataEditorGrid"] thead * {
+        background-color: #000000 !important;
         color: white !important;
     }
 </style>
