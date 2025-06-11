@@ -117,17 +117,24 @@ st.markdown("""
 
 if not data_editable.empty:
     totale = data_editable["Stima Totale"].sum()
-    totale_con_margine = round((totale * (1 + margine_errore) + costi_variabili), 2)
+    totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
     incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
     incidenza_p1 = round(totale_con_margine / superficie_p1, 2) if superficie_p1 else 0
 
-    st.markdown(f"<h3>Totale Preventivo</h3>", unsafe_allow_html=True)
+    st.markdown("<h3>Totale Preventivo</h3>", unsafe_allow_html=True)
     st.markdown(f"<p>💰 <b>Totale stimato:</b> €{totale}</p>", unsafe_allow_html=True)
     st.markdown(f"<p>💰 <b>Totale con margine e costi variabili:</b> €{totale_con_margine}</p>", unsafe_allow_html=True)
 
-    st.markdown(f"<h3>Incidenza al mq</h3>", unsafe_allow_html=True)
+    st.markdown("<h3>Incidenza al mq</h3>", unsafe_allow_html=True)
     st.markdown(f"<p>🏠 <b>Piano Terra:</b> €{incidenza_pt} / mq</p>", unsafe_allow_html=True)
     st.markdown(f"<p>🏠 <b>Piano Primo:</b> €{incidenza_p1} / mq</p>", unsafe_allow_html=True)
+
+    # 🔹 Inserisci i pulsanti di download dentro il riquadro
+    excel_file = scarica_excel(data_editable)
+    pdf_file = scarica_pdf(data_editable)
+    
+    st.download_button("📥 Scarica Excel", data=excel_file, file_name="preventivo.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    st.download_button("📥 Scarica PDF", data=pdf_file, file_name="preventivo.pdf", mime="application/pdf")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
