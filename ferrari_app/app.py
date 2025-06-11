@@ -18,7 +18,7 @@ def stile_ferrari():
 }
 
         h1, h2, h3 {
-           color: black;
+           color: white;
             text-align: center;
         }
     </style>
