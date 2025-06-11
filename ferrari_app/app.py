@@ -17,12 +17,12 @@ st.markdown("""
         color: black !important;
     }
 
-    /* Testi principali */
+    /* Testo generale */
     h1, h2, h3, h4, h5, h6, p, span, label, input, select, textarea, div {
         color: black !important;
     }
 
-    /* 🔹 Riquadro risultati con grigio visibile */
+    /* 🔹 Riquadro riepilogo con testo nero e sfondo grigio */
     .result-box {
         border: 3px solid #FFD300 !important;
         background-color: #878787 !important;
@@ -42,22 +42,22 @@ st.markdown("""
         color: black !important;
     }
 
-    /* 🔹 Tasti di download e pulsanti con sfondo nero e testo bianco */
+    /* 🔹 Tasti sotto con sfondo nero e testo bianco */
     .stDownloadButton button, .stButton button, button[kind="download"] {
         background-color: #000000 !important;
         color: white !important;
+        font-weight: bold !important;
         border: none !important;
         padding: 8px 16px !important;
         border-radius: 6px !important;
-        font-weight: bold !important;
         cursor: pointer !important;
     }
 
     .stDownloadButton button:hover, .stButton button:hover {
-        background-color: #333333 !important;
+        background-color: #222222 !important;
     }
 
-    /* 🔹 Tabella: barre con testo bianco */
+    /* 🔹 Intestazioni della tabella con testo bianco su sfondo nero */
     [data-testid="stDataEditorGrid"] thead,
     [data-testid="stDataEditorGrid"] thead * {
         background-color: #000000 !important;
