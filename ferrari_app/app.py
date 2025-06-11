@@ -26,7 +26,6 @@ st.markdown("""
             justify-content: center !important;
             align-items: center !important;
             background-color: white !important;
-            box-shadow: 0 0 5 rgba(0, 0, 0, 0.1) !important;
         }
     </style>
 """, unsafe_allow_html=True)
