@@ -19,14 +19,11 @@ def stile_ferrari():
 
 st.markdown("""
     <style>
-        /* Aumenta la dimensione delle checkbox */
         table td input[type="checkbox"] {
-            width: 100%;  /* Occupa tutta la cella */
-            height: 100%; /* Occupa tutta la cella */
-            border-radius: 10px;  /* 🔹 Aggiunge angoli stondate */
-            box-sizing: border-box; /* Garantisce che la checkbox non esca dalla cella */
+            width: 100%;
+            height: 100%;
+            border-radius: 10px; /* 🔹 Aggiunge angoli stondati */
             display: block;
-            cursor: pointer;
         }
     </style>
 """, unsafe_allow_html=True)
