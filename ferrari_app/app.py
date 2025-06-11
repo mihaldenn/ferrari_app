@@ -5,51 +5,52 @@ import pdfkit
 import io
 import xlsxwriter
 
-# ─────────────────────────────────────────────
 # CONFIGURAZIONE GENERALE
 st.set_page_config(page_title="Stima Calcolo Preventivo", layout="wide")
 
-def stile_ferrari():
-    st.markdown("""
-    <style>
-        html, body, [data-testid="stAppViewContainer"] {
-            background-color: #101012 !important;
-        }
-        .result-box {
-            width: 100% !important;
-            min-height: 250px;
-            border: 3px solid #FFD300;
-            background-color: #5c5c5c;
-            color: black;
-            padding: 200px;
-            border-radius: 10px;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-        tr:nth-child(12) td:nth-child(4) {
-            display: none !important;
-        }
-    </style>
-    """, unsafe_allow_html=True)
+# STILE CSS
+st.markdown("""
+<style>
+    html, body, [data-testid="stAppViewContainer"] {
+        background-color: white !important;
+        color: black !important;
+    }
+    .stDataEditor {
+        background-color: white !important;
+        color: black !important;
+    }
+    .result-box {
+        border: 3px solid #FFD300;
+        background-color: white;
+        color: black;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        font-size: 18px;
+        margin-top: 20px;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .result-box p {
+        margin: 8px 0;
+    }
+    tr:nth-child(12) td:nth-child(4) {
+        display: none !important;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-stile_ferrari()
-
-# ─────────────────────────────────────────────
-# SEZIONE LOGO E TITOLO
+# LOGO E TITOLO
 col1, col2, col3 = st.columns([5, 1, 1])
 with col1:
     logo = Image.open("./ferrari_app/logo_ferrari.jpg")
     st.image(logo, width=150)
 
-st.markdown(
-    "<h1 style='text-align: center; color: white;'>Stima Calcolo Preventivo - [BETA]</h1>",
-    unsafe_allow_html=True
-)
+st.markdown("<h1 style='text-align: center; color: black;'>Stima Calcolo Preventivo - [BETA]</h1>", unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────
-# SEZIONE DATI CLIENTE
+# DATI CLIENTE
 st.header("Dati Cliente e Parametri Generali")
 
 nome_cliente = st.text_input("Nome Cliente", value="Marco De Francesco")
@@ -61,8 +62,7 @@ costi_variabili = st.number_input("Costi Variabili (€)", value=1000)
 st.write(f"**Superficie Totale:** {superficie_pt + superficie_p1} mq")
 st.write(f"**Cliente selezionato:** {nome_cliente}")
 
-# ─────────────────────────────────────────────
-# SEZIONE TABELLA PRODOTTI
+# CONFIGURA PRODOTTI
 st.header("Configura Prodotti e Costi")
 
 prodotti = [
@@ -70,83 +70,34 @@ prodotti = [
     "MODULARI", "VETRO", "BAGNI", "ELETTRICO", "ARIA", "VMC", "ARREDI", "SOPPALCO"
 ]
 
-# 🔹 Definizione dati iniziali con checkbox unificata per SOPPALCO
 data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
-    "PT": [False] * 11 + [False],  # ✅ Solo SOPPALCO ha una checkbox attiva
-    "P1": [False] * 11 + [None]  # ✅ La colonna P1 è vuota per SOPPALCO
+    "PT": [False] * 11 + [True],
+    "P1": [False] * 11 + [""]  # SOPPALCO con P1 nascosto
 })
 
-# 🔹 Inizializza la sessione con dati validi
-if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list) or not st.session_state["editor"]:
+if not {"Stima PT", "Stima P1", "Stima Totale"}.issubset(data_iniziale.columns):
+    data_iniziale["Stima PT"] = 0.0
+    data_iniziale["Stima P1"] = 0.0
+    data_iniziale["Stima Totale"] = 0.0
+
+if "editor" not in st.session_state or not isinstance(st.session_state["editor"], list):
     st.session_state["editor"] = data_iniziale.to_dict(orient="records")
 
-if isinstance(st.session_state["editor"], list) and len(st.session_state["editor"]) > 0:
-    data_editable = pd.DataFrame(st.session_state["editor"])
-else:
-    data_editable = pd.DataFrame(data_iniziale)
+data_editable = pd.DataFrame(st.session_state["editor"])
 
-# 🔹 Mostra la tabella con dati modificabili 
 if not data_editable.empty:
-    data_editable = st.data_editor(
-        data_editable, 
-        disabled=["Prodotto"],
-        height=460,
-        hide_index=True
-    )
-else:
-    st.warning("⚠️ Nessun dato disponibile per la tabella!")
+    st.data_editor(data_editable, disabled=["Prodotto"], height=460, hide_index=True)
 
-# 🔹 Calcolo automatico delle stime
-if set(["PT", "P1", "Costo/mq"]).issubset(set(data_editable.columns)):
-    data_editable["Stima PT"] = data_editable.apply(
-        lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
+# CALCOLO STIME
+data_editable["Stima PT"] = data_editable.apply(
+    lambda row: row["Costo/mq"] * superficie_pt if row["PT"] else 0.0, axis=1)
+data_editable["Stima P1"] = data_editable.apply(
+    lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
+data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
-    data_editable["Stima P1"] = data_editable.apply(
-        lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
-
-    data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
-
-# ─────────────────────────────────────────────
-# SEZIONE RISULTATI FINALI
-with st.container():
-    st.markdown("""
-        <style>
-            div[data-testid="stVerticalBlock"] > div {
-                border: 3px solid #FFD300;
-                background-color: white;
-                color: black;
-                border-radius: 10px;
-                box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
-                padding: 20px;
-                margin-top: 20px;
-                text-align: center;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-
-    st.markdown("## 📊 Riepilogo Preventivo")
-
-    if not data_editable.empty:
-        totale = data_editable["Stima Totale"].sum()
-        totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
-        incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
-        incidenza_p1 = round(totale_con_margine / superficie_p1, 2) if superficie_p1 else 0
-
-        st.subheader("Totale Preventivo")
-        st.write(f"💰 **Totale stimato:** €{totale}")
-        st.write(f"💰 **Totale con margine e costi variabili:** €{totale_con_margine}")
-
-        st.subheader("Incidenza al mq")
-        st.write(f"🏠 Piano Terra: €{incidenza_pt} / mq")
-        st.write(f"🏠 Piano Primo: €{incidenza_p1} / mq")
-
-        st.download_button("📥 Scarica Excel", data=scarica_excel(data_editable), file_name="preventivo.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        st.download_button("📥 Scarica PDF", data=scarica_pdf(data_editable), file_name="preventivo.pdf", mime="application/pdf")
-
-# ─────────────────────────────────────────────
-# FUNZIONI DI DOWNLOAD
+# FUNZIONI PER IL DOWNLOAD
 def scarica_excel(df):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
@@ -159,20 +110,20 @@ def scarica_pdf(df):
     pdf_file = pdfkit.from_string(html, False)
     return io.BytesIO(pdf_file)
 
-# 🔹 Pulsante per scaricare Excel
-excel_file = scarica_excel(data_editable)
-st.download_button(
-    label="📥 Scarica Excel",
-    data=excel_file,
-    file_name="preventivo.xlsx",
-    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-)
+# SEZIONE RISULTATI NEL RIQUADRO
+if not data_editable.empty:
+    totale = data_editable["Stima Totale"].sum()
+    totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
+    incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
+    incidenza_p1 = round(totale_con_margine / superficie_p1, 2) if superficie_p1 else 0
 
-# 🔹 Pulsante per scaricare PDF
-pdf_file = scarica_pdf(data_editable)
-st.download_button(
-    label="📥 Scarica PDF",
-    data=pdf_file,
-    file_name="preventivo.pdf",
-    mime="application/pdf"
-)
+    # INIZIO RIQUADRO RISULTATI
+    st.markdown('<div class="result-box">', unsafe_allow_html=True)
+    st.markdown("<h3>📊 Riepilogo Preventivo</h3>", unsafe_allow_html=True)
+    st.markdown(f"<p>💰 <b>Totale stimato:</b> €{totale}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>💰 <b>Totale con margine e costi variabili:</b> €{totale_con_margine}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>🏠 <b>Incidenza Piano Terra:</b> €{incidenza_pt} / mq</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>🏠 <b>Incidenza Piano Primo:</b> €{incidenza_p1} / mq</p>", unsafe_allow_html=True)
+    st.download_button("📥 Scarica Excel", data=scarica_excel(data_editable), file_name="preventivo.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    st.download_button("📥 Scarica PDF", data=scarica_pdf(data_editable), file_name="preventivo.pdf", mime="application/pdf")
+    st.markdown("</div>", unsafe_allow_html=True)
