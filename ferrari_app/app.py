@@ -67,8 +67,7 @@ data_iniziale = pd.DataFrame({
         "MODULARI", "VETRO", "BAGNI", "ELETTRICO", "ARIA", "VMC", "ARREDI", "SOPPALCO"
     ],
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
-    "PT": [False] * 11 + [None],  # 🔹 PT sarà nascosto solo per il Soppalco
-    "P1": [False] * 11 + [None],  # 🔹 P1 sarà nascosto solo per il Soppalco
+    "PT/P1": [False] * 11 + [False],  # 🔹 Per "SOPPALCO", unisci PT e P1
     "Soppalco": [None] * 11 + [False],  # 🔹 Solo il Soppalco avrà una casella di spunta unica
     "Stima PT": [0.0] * len(prodotti),
     "Stima P1": [0.0] * len(prodotti),
