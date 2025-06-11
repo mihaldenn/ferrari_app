@@ -19,10 +19,12 @@ def stile_ferrari():
 
 st.markdown("""
     <style>
+        /* Modifica le checkbox nella tabella */
         input[type="checkbox"] {
             width: 100%;
             height: 100%;
-            border-radius: 10px;  /* ✅ Questa sintassi è corretta */
+            padding: 5px; /* 🔹 Aggiunge spazio interno per un effetto più grande */
+            margin: auto; /* 🔹 Centra le checkbox nella cella */
             display: flex;
             justify-content: center;
             align-items: center;
