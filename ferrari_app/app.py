@@ -40,8 +40,8 @@ st.markdown("""
         color: black !important;
     }
 
-    /* Pulsanti download e standard */
-    [data-testid="baseButton-secondary"], button {
+    /* Pulsanti */
+    [data-testid="baseButton-secondary"], .stDownloadButton button, .stButton button {
         background-color: #878787 !important;
         color: white !important;
         font-weight: bold !important;
@@ -49,26 +49,23 @@ st.markdown("""
         padding: 8px 16px !important;
         border-radius: 6px !important;
         cursor: pointer !important;
-        box-shadow: none !important;
     }
 
-    [data-testid="baseButton-secondary"]:hover, button:hover {
-        background-color: #707070 !important;
-    }
-
-    /* Tabella editor (celle, intestazione, sfondo) */
+    /* Tabella: celle e sfondo */
     [data-testid="stDataEditorGrid"] {
         background-color: #878787 !important;
-        color: black !important;
     }
 
-    [data-testid="stDataEditorGrid"] div[role="gridcell"] {
+    [data-testid="stDataEditorGrid"] div[role="gridcell"],
+    [data-testid="stDataEditorGrid"] div[role="row"],
+    [data-testid="stDataEditorGrid"] div[role="columnheader"] {
         background-color: #878787 !important;
         color: black !important;
+        border: 1px solid #cccccc !important;
     }
 
-    [data-testid="stDataEditorGrid"] thead, [data-testid="stDataEditorGrid"] thead * {
-        background-color: #777777 !important;
+    [data-testid="stDataEditorGrid"] thead {
+        background-color: #7a7a7a !important;
         color: white !important;
     }
 </style>
