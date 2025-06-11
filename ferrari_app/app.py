@@ -18,10 +18,10 @@ st.markdown("""
     h1, h2, h3, h4, h5, h6, p, div, span, label, input, select, textarea {
         color: black !important;
     }
+
     .result-box {
         border: 3px solid #FFD300;
         background-color: white;
-        color: black;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
@@ -32,10 +32,16 @@ st.markdown("""
         margin-left: auto;
         margin-right: auto;
     }
+
+    .result-box * {
+        color: black !important;  /* 🔧 Forziamo nero solo nel blocco */
+    }
+
     .result-box p {
         margin: 8px 0;
     }
 
+    /* ✅ Pulsanti in grigio */
     .stDownloadButton > button, .stButton > button {
         background-color: #7d7d7d !important;
         color: white !important;
