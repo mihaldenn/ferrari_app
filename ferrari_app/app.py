@@ -8,7 +8,7 @@ import xlsxwriter
 # CONFIGURAZIONE GENERALE
 st.set_page_config(page_title="Stima Calcolo Preventivo", layout="wide")
 
-# STILE CSS
+# STILE
 st.markdown("""
 <style>
     html, body, [data-testid="stAppViewContainer"] {
@@ -62,7 +62,7 @@ costi_variabili = st.number_input("Costi Variabili (€)", value=1000)
 st.write(f"**Superficie Totale:** {superficie_pt + superficie_p1} mq")
 st.write(f"**Cliente selezionato:** {nome_cliente}")
 
-# CONFIGURA PRODOTTI
+# TABELLA PRODOTTI
 st.header("Configura Prodotti e Costi")
 
 prodotti = [
@@ -74,7 +74,7 @@ data_iniziale = pd.DataFrame({
     "Prodotto": prodotti,
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
     "PT": [False] * 11 + [True],
-    "P1": [False] * 11 + [""]  # SOPPALCO con P1 nascosto
+    "P1": [False] * 11 + [""]
 })
 
 if not {"Stima PT", "Stima P1", "Stima Totale"}.issubset(data_iniziale.columns):
@@ -97,7 +97,7 @@ data_editable["Stima P1"] = data_editable.apply(
     lambda row: row["Costo/mq"] * superficie_p1 if row["P1"] else 0.0, axis=1)
 data_editable["Stima Totale"] = data_editable["Stima PT"] + data_editable["Stima P1"]
 
-# FUNZIONI PER IL DOWNLOAD
+# FUNZIONI DI DOWNLOAD
 def scarica_excel(df):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
@@ -110,20 +110,23 @@ def scarica_pdf(df):
     pdf_file = pdfkit.from_string(html, False)
     return io.BytesIO(pdf_file)
 
-# SEZIONE RISULTATI NEL RIQUADRO
+# RIEPILOGO PREVENTIVO NEL RIQUADRO
 if not data_editable.empty:
     totale = data_editable["Stima Totale"].sum()
     totale_con_margine = round(totale * (1 + margine_errore) + costi_variabili, 2)
     incidenza_pt = round(totale_con_margine / superficie_pt, 2) if superficie_pt else 0
     incidenza_p1 = round(totale_con_margine / superficie_p1, 2) if superficie_p1 else 0
 
-    # INIZIO RIQUADRO RISULTATI
-    st.markdown('<div class="result-box">', unsafe_allow_html=True)
-    st.markdown("<h3>📊 Riepilogo Preventivo</h3>", unsafe_allow_html=True)
-    st.markdown(f"<p>💰 <b>Totale stimato:</b> €{totale}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p>💰 <b>Totale con margine e costi variabili:</b> €{totale_con_margine}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p>🏠 <b>Incidenza Piano Terra:</b> €{incidenza_pt} / mq</p>", unsafe_allow_html=True)
-    st.markdown(f"<p>🏠 <b>Incidenza Piano Primo:</b> €{incidenza_p1} / mq</p>", unsafe_allow_html=True)
+    # RIQUADRO UNIFICATO
+    st.markdown(f"""
+    <div class="result-box">
+        <h3>📊 Riepilogo Preventivo</h3>
+        <p>💰 <b>Totale stimato:</b> €{totale}</p>
+        <p>💰 <b>Totale con margine e costi variabili:</b> €{totale_con_margine}</p>
+        <p>🏠 <b>Incidenza Piano Terra:</b> €{incidenza_pt} / mq</p>
+        <p>🏠 <b>Incidenza Piano Primo:</b> €{incidenza_p1} / mq</p>
+    </div>
+    """, unsafe_allow_html=True)
+
     st.download_button("📥 Scarica Excel", data=scarica_excel(data_editable), file_name="preventivo.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     st.download_button("📥 Scarica PDF", data=scarica_pdf(data_editable), file_name="preventivo.pdf", mime="application/pdf")
-    st.markdown("</div>", unsafe_allow_html=True)
