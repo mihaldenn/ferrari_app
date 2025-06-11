@@ -17,6 +17,20 @@ def stile_ferrari():
     color: #333333;  /* Testo in grigio scuro */
 }
 
+st.markdown("""
+    <style>
+        /* Aumenta la dimensione delle checkbox */
+        table td input[type="checkbox"] {
+            width: 100%;  /* Occupa tutta la cella */
+            height: 100%; /* Occupa tutta la cella */
+            border-radius: 10px;  /* 🔹 Aggiunge angoli stondate */
+            box-sizing: border-box; /* Garantisce che la checkbox non esca dalla cella */
+            display: block;
+            cursor: pointer;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
         h1, h2, h3 {
            color: white;
             text-align: center;
