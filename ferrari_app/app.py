@@ -67,7 +67,8 @@ data_iniziale = pd.DataFrame({
         "MODULARI", "VETRO", "BAGNI", "ELETTRICO", "ARIA", "VMC", "ARREDI", "SOPPALCO"
     ],
     "Costo/mq": [60, 110, 80, 150, 190, 230, 100, 190, 250, 250, 150, 600],
-    "PT/P1": [False] * 11 + [False],
+    "PT": [False] * 11 + [False],  # Mantiene separato per tutti tranne il Soppalco
+    "P1": [False] * 11 + [None],  # 🔹 Usa "None" per nascondere la colonna P1 solo per il Soppalco
     "Stima PT": [0.0] * len(prodotti),
     "Stima P1": [0.0] * len(prodotti),
     "Stima Totale": [0.0] * len(prodotti)
