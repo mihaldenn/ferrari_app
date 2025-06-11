@@ -23,7 +23,6 @@ st.markdown("""
         input[type="checkbox"] {
             width: 100%;
             height: 100%;
-            padding: 5px; /* 🔹 Aggiunge spazio interno per un effetto più grande */
             margin: auto; /* 🔹 Centra le checkbox nella cella */
             display: flex;
             justify-content: center;
