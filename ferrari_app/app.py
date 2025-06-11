@@ -23,7 +23,7 @@ st.markdown("""
         .stDataFrame input[type="checkbox"] {
             width: 100%;
             height: 100%;
-            border-radius: 10px !important; /* 🔹 Usa !important per forzare lo stile */
+            border-radius: 10px; /*
             display: flex;
             justify-content: center;
             align-items: center;
