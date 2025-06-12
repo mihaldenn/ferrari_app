@@ -77,7 +77,7 @@ with col1:
     st.image(logo, width=150)
 
 st.markdown("<h1 style='text-align: center; color: black;'>Stima Calcolo Preventivo - WebApp</h1>", unsafe_allow_html=True)
-st.header("nuova versione con Flisk")
+st.header("vecchia webapp - versione con python e css")
 # DATI CLIENTE
 st.header("Dati Cliente e Parametri Generali")
 
